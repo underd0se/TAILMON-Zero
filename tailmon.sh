@@ -11,6 +11,7 @@
 
 #Preferred standard router binaries path
 export PATH="/sbin:/bin:/usr/sbin:/usr/bin:$PATH"
+export GOMAXPROCS=1
 unset LD_LIBRARY_PATH
 
 ##-------------------------------------##
@@ -564,7 +565,8 @@ expressinstall()
   echo ""
 
   tsversion_before="$(tailscale version 2>/dev/null | awk 'NR==1 {print $1}')"
-  tailscale update --yes
+  mkdir -p /opt/tmp
+  TMPDIR="/opt/tmp" tailscale update --yes
   tsupdate_rc=$?
   tsversion_after="$(tailscale version 2>/dev/null | awk 'NR==1 {print $1}')"
 
@@ -606,7 +608,7 @@ expressinstall()
     expressinstallfail "Unable to apply the Userspace ARGS setting to S06tailscaled."
   fi
 
-  if ! sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"; then
+  if ! sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"; then
     expressinstallfail "Unable to apply the Userspace PREARGS setting to S06tailscaled."
   fi
 
@@ -779,7 +781,8 @@ installts()
       echo ""
       echo -e "${CGreen}Executing: tailscale update${CClear}"
       echo ""
-      tailscale update
+      mkdir -p /opt/tmp
+      TMPDIR="/opt/tmp" tailscale update
       echo -e "${CClear}"
       echo ""
       echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary updated to latest available version." >> $logfile
@@ -1126,7 +1129,8 @@ tsupdate()
 
       echo "Executing: tailscale update"
       echo ""
-      tailscale update
+      mkdir -p /opt/tmp
+      TMPDIR="/opt/tmp" tailscale update
 
       echo ""
       echo -e "Restart Tailscale?"
@@ -1155,7 +1159,8 @@ tsbeta()
 
   echo "Executing: tailscale update --track unstable"
   echo ""
-  tailscale update --track unstable
+  mkdir -p /opt/tmp
+  TMPDIR="/opt/tmp" tailscale update --track unstable
 
   echo ""
   echo -e "Restart Tailscale?"
@@ -1388,7 +1393,8 @@ autoupdate()
           printf "${CGreen}\r[Downloading New Tailscale Binary v$servertsver]\n"
           echo -e "${CClear}"
           sleep 1
-          tailscale update --yes
+          mkdir -p /opt/tmp
+          TMPDIR="/opt/tmp" tailscale update --yes
           officialtsver=$?
           if [ $officialtsver -ne 0 ]
             then
@@ -1546,7 +1552,8 @@ tsdowngrade()
     echo ""
 
     # Define file paths
-    TMP_DIR="/tmp"
+    TMP_DIR="/opt/tmp"
+    mkdir -p "$TMP_DIR"
     DOWNLOAD_PATH="$TMP_DIR/tailscale_${TS_VERSION}_${TS_ARCH}.tgz"
     EXTRACT_DIR="$TMP_DIR/tailscale_${TS_VERSION}_${TS_ARCH}"
     DEST_DIR="/opt/bin"
@@ -2298,7 +2305,7 @@ done
 applyuserspacemode()
 {
   sed -i "s/^ARGS=.*/ARGS=\"--tun=userspace-networking\ --state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"
   sed -i -e '/^PRECMD=/d' "/opt/etc/init.d/S06tailscaled"
 
   #remove firewall-start entry if found
@@ -2327,7 +2334,7 @@ applykernelmode()
     sed -i "s/^PRECMD=.*/PRECMD=\"modprobe tun\"/" "/opt/etc/init.d/S06tailscaled"
   fi
   sed -i "s/^ARGS=.*/ARGS=\"--state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"
 
   #modify/create firewall-start
   if [ -f /jffs/scripts/firewall-start ]; then
@@ -2360,7 +2367,7 @@ applycustommode()
     sed -i "s/^PRECMD=.*/PRECMD=\"modprobe tun\"/" "/opt/etc/init.d/S06tailscaled"
   fi
   sed -i "s/^ARGS=.*/ARGS=\"--state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"
 
   #modify/create firewall-start
   if [ -f /jffs/scripts/firewall-start ]; then
