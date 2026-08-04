@@ -3910,17 +3910,7 @@ vuninstall()
             echo "$old_overcommit" > /proc/sys/vm/overcommit_memory 2>/dev/null
           fi
           
-          # Strip TAILMON memory injections from S06tailscaled
-          if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
-            sed -i '/# TAILMON Zero: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
-            sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
-            sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
-            sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
-            sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
-            sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
-            sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
-            # Note: We do not blindly delete 'fi' here to avoid breaking the script.
-          fi
+
           
           # Clean up any residual temporary download files
           rm -f /opt/tmp/tailscaled 2>/dev/null
@@ -3985,6 +3975,24 @@ vuninstall()
               fi
               exit 0
             else
+              echo ""
+              echo -e "\nWould you like to RETAIN the TAILMON Zero memory optimizations for Tailscale?"
+              echo -e "This is highly recommended to prevent your router from crashing."
+              if promptyn "[y/n]: "; then
+                echo ""
+                echo -e "\n${CGreen}Tailscale memory optimizations preserved.${CClear}"
+              else
+                echo -e "\nStripping memory optimizations..."
+                if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
+                  sed -i '/# TAILMON Zero: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
+                fi
+              fi
               echo ""
               echo -e "\nExiting Uninstall Utility...${CClear}"
               sleep 1
