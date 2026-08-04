@@ -21,7 +21,7 @@ unset LD_LIBRARY_PATH
 export SCREENDIR="${HOME}/.screen"
 
 #Static Variables - please do not change
-version="1.4.0"
+version="0.1.0"
 beta=0                                                               # Beta indicator on/off
 track=0                                                              # Stable (0) / Beta (1) Track subscription
 apppath="/jffs/scripts/tailmon.sh"                                   # Static path to the app
@@ -110,6 +110,7 @@ logoNM ()
   echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
   echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
   echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
+  echo -e "                                      [  Z  E  R  0  ]"
   echo ""
   echo ""
   printf "\r                            ${CGreen}    [ INITIALIZING ]     ${CClear}"
@@ -123,6 +124,7 @@ logoNM ()
   echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
   echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
   echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
+  echo -e "                                      [  Z  E  R  0  ]"
   echo ""
   echo ""
   printf "\r                            ${CGreen}[ INITIALIZING ... DONE ]${CClear}"
@@ -142,6 +144,7 @@ logoNMexit ()
   echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
   echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
   echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
+  echo -e "                                      [  Z  E  R  0  ]"
   echo ""
   echo ""
   printf "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
@@ -155,6 +158,7 @@ logoNMexit ()
   echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
   echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
   echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
+  echo -e "                                      [  Z  E  R  0  ]"
   echo ""
   echo ""
   printf "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
@@ -608,13 +612,15 @@ expressinstall()
     expressinstallfail "Unable to apply the Userspace ARGS setting to S06tailscaled."
   fi
 
-  if ! sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"; then
+  if ! sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"; then
     expressinstallfail "Unable to apply the Userspace PREARGS setting to S06tailscaled."
   fi
 
   if ! sed -i -e '/^PRECMD=/d' "/opt/etc/init.d/S06tailscaled"; then
     expressinstallfail "Unable to remove the PRECMD setting from S06tailscaled."
   fi
+
+  inject_s06tailscaled
 
   echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Userspace Mode settings have been applied." >> "$logfile"
 
@@ -1241,7 +1247,7 @@ autoupdate()
   echo > /jffs/addons/tailmon.d/updating.txt
 
   #Display tailmon client header
-  echo -en "${InvGreen} ${InvDkGray} TAILMON - v"
+  echo -en "${InvGreen} ${InvDkGray} TAILMON ZER0 - v"
   printf "%-8s" $version
   echo -e "                      ${CWhite}Run Auto Update${InvDkGray}                  $tzspaces$(date) ${CClear}"
   echo ""
@@ -2300,12 +2306,40 @@ done
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
+# inject_s06tailscaled applies TAILMON Zero swapless logic and memory constraints
+
+inject_s06tailscaled()
+{
+  # Capture old_overcommit for uninstall if swapless
+  local swap_total=$(free | awk '/^Swap:/ {print $2}')
+  if [ "$swap_total" = "0" ] && [ -z "$old_overcommit" ]; then
+    old_overcommit=$(cat /proc/sys/vm/overcommit_memory 2>/dev/null)
+    saveconfig
+  fi
+
+  if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
+    # Clean old injections
+    sed -i '/# TAILMON Zero: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/swap_total=$(free/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/if \[ "$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/fi/d' "/opt/etc/init.d/S06tailscaled"
+
+    # Inject new logic
+    awk 'NR==2{print "# TAILMON Zero: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"')"; print "if [ \"$swap_total\" = \"0\" ]; then"; print "    echo 0 > /proc/sys/vm/overcommit_memory"; print "fi"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
+  fi
+}
+
+# -------------------------------------------------------------------------------------------------------------------------
 # applyuserspacemode applies the standard settings for the Userspace operating mode
 
 applyuserspacemode()
 {
   sed -i "s/^ARGS=.*/ARGS=\"--tun=userspace-networking\ --state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"
   sed -i -e '/^PRECMD=/d' "/opt/etc/init.d/S06tailscaled"
 
   #remove firewall-start entry if found
@@ -2317,6 +2351,7 @@ applyuserspacemode()
     fi
 
   fi
+  inject_s06tailscaled
   echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Userspace Mode settings have been applied." >> $logfile
 }
 
@@ -2334,7 +2369,7 @@ applykernelmode()
     sed -i "s/^PRECMD=.*/PRECMD=\"modprobe tun\"/" "/opt/etc/init.d/S06tailscaled"
   fi
   sed -i "s/^ARGS=.*/ARGS=\"--state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"
 
   #modify/create firewall-start
   if [ -f /jffs/scripts/firewall-start ]; then
@@ -2350,6 +2385,7 @@ applykernelmode()
     echo "if [ -x /opt/bin/tailscale ]; then tailscale down; tailscale up; fi # Added by TAILMON" >> /jffs/scripts/firewall-start
     chmod 0755 /jffs/scripts/firewall-start
   fi
+  inject_s06tailscaled
   echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Kernel Mode settings have been applied." >> $logfile
 }
 
@@ -2367,7 +2403,7 @@ applycustommode()
     sed -i "s/^PRECMD=.*/PRECMD=\"modprobe tun\"/" "/opt/etc/init.d/S06tailscaled"
   fi
   sed -i "s/^ARGS=.*/ARGS=\"--state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup\"/" "/opt/etc/init.d/S06tailscaled"
 
   #modify/create firewall-start
   if [ -f /jffs/scripts/firewall-start ]; then
@@ -2389,6 +2425,7 @@ applycustommode()
   customcmdline="$exitnodecmd$advroutescmd"
   saveconfig
 
+  inject_s06tailscaled
   echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Custom Mode settings have been applied." >> $logfile
 }
 
@@ -3858,6 +3895,10 @@ vuninstall()
       echo -e "\nAre you sure? Please type 'y' to validate you wish to proceed.${CClear}"
         if promptyn "[y/n]: "; then
           #Remove and uninstall files/directories
+          if [ -n "$old_overcommit" ]; then
+            echo -e "\n${CGreen}Restoring vm.overcommit_memory to $old_overcommit...${CClear}"
+            echo "$old_overcommit" > /proc/sys/vm/overcommit_memory 2>/dev/null
+          fi
           rm -f -r /jffs/addons/tailmon.d >/dev/null 2>&1
           rm -f /jffs/scripts/tailmon.sh >/dev/null 2>&1
           sed -i -e '/tailmon.sh/d' /jffs/scripts/post-mount >/dev/null 2>&1
@@ -3993,6 +4034,7 @@ saveconfig()
      echo 'preargs="'"$preargs"'"'
      echo 'routes="'"$routes"'"'
      echo 'customcmdline="'"$customcmdline"'"'
+     echo 'old_overcommit="'"$old_overcommit"'"'
    } > $config
    echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON config has been updated." >> $logfile
 
@@ -4319,7 +4361,7 @@ while true; do
     fi
 
     #Display tailmon client header
-    echo -en "${InvGreen} ${InvDkGray} TAILMON - v"
+    echo -en "${InvGreen} ${InvDkGray} TAILMON ZER0 - v"
     printf "%-8s" $version
     echo -e "                     ${CWhite}Operations Menu ${InvDkGray}           $tzspaces$(date +"%a %b %d, %Y %H:%M:%S %Z %z") ${CClear}"
     echo -e "${InvGreen} ${CClear} ${CGreen}(R)${CClear}e-${CGreen}(S)${CClear}tart / S${CGreen}(T)${CClear}op Tailscale Service              ${InvGreen} ${CClear} ${CGreen}(C)${CClear}onfiguration Menu / Main Setup Menu $rldisp${CClear}"
