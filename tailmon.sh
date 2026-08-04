@@ -101,6 +101,10 @@ cleanup() {
 }
 trap cleanup EXIT ERR INT TERM
 
+
+# Progressbar variables (optimized)
+barlen=46
+barspaces="                                              "
 # -------------------------------------------------------------------------------------------------------------------------
 # LogoNM is a function that displays the BACKUPMON script name in a cool ASCII font without menu options
 
@@ -262,7 +266,7 @@ readmenucommand()
 {
   key_press=""
   menu_line_submitted=0
-  ttydev="$(tty 2>/dev/null)"
+  if [ -z "$ttydev" ]; then ttydev="$(tty 2>/dev/null)"; fi
 
   if [ -z "$ttydev" ] || [ "$ttydev" = "not a tty" ]; then
     return 1
@@ -314,7 +318,7 @@ drainpendingttyinput()
 {
   local ttydev discarded_input
 
-  ttydev="$(tty 2>/dev/null)"
+  if [ -z "$ttydev" ]; then ttydev="$(tty 2>/dev/null)"; fi
   if [ -z "$ttydev" ] || [ "$ttydev" = "not a tty" ]; then
     return 0
   fi
@@ -920,8 +924,7 @@ startts()
           while [ $timer -le 5 ]
           do
             timer="$((timer+1))"
-            preparebar 46 "|"
-            progressbarpause $timer 5 "" "s" "Standard"
+                progressbarpause $timer 5 "" "s" "Standard"
           done
           printf "\33[2K\r"
       fi
@@ -1081,8 +1084,7 @@ tsup()
             while [ $timer -le 5 ]
             do
               timer="$((timer+1))"
-              preparebar 46 "|"
-              progressbarpause $timer 5 "" "s" "Standard"
+                    progressbarpause $timer 5 "" "s" "Standard"
             done
             printf "\33[2K\r"
         fi
@@ -1100,8 +1102,7 @@ tsup()
             while [ $timer -le 5 ]
             do
               timer="$((timer+1))"
-              preparebar 46 "|"
-              progressbarpause $timer 5 "" "s" "Standard"
+                    progressbarpause $timer 5 "" "s" "Standard"
             done
             printf "\33[2K\r"
         fi
@@ -1365,7 +1366,7 @@ autoupdate()
       sleep 1
 
       # Checking for local Tailscale version
-      echo $(tailscale version | awk 'NR==1 {print $1}') > /jffs/addons/tailmon.d/localtsver.txt
+      tailscale version | awk 'NR==1 {print $1}' > /jffs/addons/tailmon.d/localtsver.txt
       localtsverchk=$?
       if [ $localtsverchk -ne 0 ]
         then
@@ -1384,7 +1385,7 @@ autoupdate()
       sleep 1
 
       # Checking for upstream Tailscale version
-      echo $(tailscale version --upstream | grep "upstream" | cut -d ':' -f 2) > /jffs/addons/tailmon.d/tsversion.txt
+      tailscale version --upstream | awk -F":" '/upstream/ {print $2}' | sed "s/^ //" > /jffs/addons/tailmon.d/tsversion.txt
       upstreamtsverchk=$?
       if [ $upstreamtsverchk -ne 0 ]
         then
@@ -1861,16 +1862,14 @@ done
 _ValidateCronJobHour_()
 {
    if [ $# -eq 0 ] || [ -z "$1" ] ; then return 1 ; fi
-   if echo "$1" | grep -qE "^(0|[1-9][0-9]?)$" && \
-      [ "$1" -ge 0 ] && [ "$1" -lt 24 ]
+   if [ "$1" -ge 0 ] 2>/dev/null && [ "$1" -lt 24 ] 2>/dev/null
    then return 0 ; else return 1 ; fi
 }
 
 _ValidateCronJobMinute_()
 {
     if [ $# -eq 0 ] || [ -z "$1" ] ; then return 1 ; fi
-    if echo "$1" | grep -qE "^(0|[1-9][0-9]?)$" && \
-       [ "$1" -ge 0 ] && [ "$1" -lt 60 ]
+    if [ "$1" -ge 0 ] 2>/dev/null && [ "$1" -lt 60 ] 2>/dev/null
     then return 0 ; else return 1 ; fi
 }
 
@@ -2040,21 +2039,21 @@ while true; do
   echo -e "${InvGreen} ${CClear}"
   echo -e "${InvGreen} ${CClear} Current values in Tailscale Service (/opt/etc/init.d/S06tailscaled):${CClear}"
 
-  s06args=$(cat /opt/etc/init.d/S06tailscaled | grep ^ARGS= | cut -d '=' -f 2-) 2>/dev/null
+  s06args=$(sed -n 's/^ARGS=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
   if [ -z "$s06args" ]; then
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(1)${CClear} ${CGreen}ARGS=\"\"${CClear}"
   else
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(1)${CClear} ${CGreen}ARGS=$s06args${CClear}"
   fi
 
-  s06preargs=$(cat /opt/etc/init.d/S06tailscaled | grep ^PREARGS= | cut -d '=' -f 2-) 2>/dev/null
+  s06preargs=$(sed -n 's/^PREARGS=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
   if [ -z "$s06preargs" ]; then
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(2)${CClear} ${CGreen}PREARGS=\"\"${CClear}"
   else
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(2)${CClear} ${CGreen}PREARGS=$s06preargs${CClear}"
   fi
 
-  s06precmd=$(cat /opt/etc/init.d/S06tailscaled | grep ^PRECMD= | cut -d '=' -f 2-) 2>/dev/null
+  s06precmd=$(sed -n 's/^PRECMD=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
   if [ -z "$s06precmd" ]; then
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(3)${CClear} ${CGreen}PRECMD=\"\"${CClear}"
   else
@@ -2792,9 +2791,7 @@ while true; do
          if [ "$newratelimit" = "e" ]
          then
              echo -e "\n[Exiting]"; sleep 2
-         elif echo "$newratelimit" | grep -qE "^(0|[1-9][0-9]{0,3})$" && \
-             [ "$newratelimit" -ge 0 ] && [ "$newratelimit" -le 9999 ]
-         then
+         elif [ "$newratelimit" -ge 0 ] 2>/dev/null && [ "$newratelimit" -le 9999 ] 2>/dev/null; then
              ratelimit="$newratelimit"
              echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: New Email Rate Limit entered (per hour): $ratelimit" >> "$logfile"
              saveconfig
@@ -4007,7 +4004,7 @@ trimlogs()
 {
   if [ "$logsize" -gt 0 ]
   then
-      currlogsize="$(wc -l "$logfile" | awk '{ print $1 }')" # Determine the number of rows in the log
+      currlogsize="$(wc -l < "$logfile")" # Determine the number of rows in the log
 
       if [ "$currlogsize" -gt "$logsize" ] # If it's bigger than the max allowed, tail/trim it!
       then
@@ -4179,7 +4176,7 @@ if [ "$1" == "-screen" ]
 
     /opt/sbin/screen -wipe >/dev/null 2>&1 # Kill any dead screen sessions
     sleep 1
-    ScreenSess=$(/opt/sbin/screen -ls | grep "tailmon" | awk '{print $1}' | cut -d . -f 1)
+    ScreenSess=$(/opt/sbin/screen -ls | awk '/tailmon/ {split($1,a,"."); print a[1]}')
       if [ -z "$ScreenSess" ]; then
         if [ "$bypassscreentimer" == "1" ]; then
           /opt/sbin/screen -dmS "tailmon" "$apppath" -noswitch
@@ -4346,8 +4343,8 @@ while true; do
         fi
     fi
 
-    tzone=$(date +%Z)
-    tzonechars=$(echo ${#tzone})
+    if [ -z "$tzone" ]; then tzone=$(date +%Z); fi
+    tzonechars=${#tzone}
 
     if [ "$tzonechars" = 1 ]; then tzspaces="        ";
     elif [ "$tzonechars" = 2 ]; then tzspaces="       ";
@@ -4452,7 +4449,7 @@ while true; do
   #Determine if S06tailscaled service settings have changed
   if [ $tsinstalled -eq 1 ] && [ "$persistentsettings" -eq 1 ]; then
 
-    s06args=$(cat /opt/etc/init.d/S06tailscaled | grep ^ARGS= | cut -d '=' -f 2-) 2>/dev/null
+    s06args=$(sed -n 's/^ARGS=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
     tailmonargs="\"$args\""
 
     if [ "$s06args" != "$tailmonargs" ]; then
@@ -4510,13 +4507,11 @@ while true; do
     sendmessage 1 "Tailscale Service Restarted"
   fi
 
-  #Determine if router rebooted
-  #uptime=$(awk '{printf("%03dd %02dh %02dm %02ds\n",($1/60/60/24),($1/60/60%24),($1/60%60),($1%60))}' /proc/uptime)
-  uptimedays=$(awk '{printf("%1d\n",($1/60/60/24))}' /proc/uptime)
-  uptimehrs=$(awk '{printf("%1d\n",($1/60/60%24))}' /proc/uptime)
-  uptimemins=$(awk '{printf("%1d\n",($1/60%60))}' /proc/uptime)
-
-  if [ "$uptimedays" -eq 0 ] && [ "$uptimehrs" -eq 0 ] && [ "$uptimemins" -le 10 ] && [ "$routerboot" -eq 0 ]; then
+  #Determine if router rebooted (uptime < 10 mins)
+  read -r uptime_sec _ < /proc/uptime
+  uptime_sec="${uptime_sec%.*}"
+  
+  if [ "$uptime_sec" -le 600 ] && [ "$routerboot" -eq 0 ]; then
     # Router must have rebooted and send a notification
     printf "\33[2K\r"
     printf "${CGreen}\r[Router appears to have been restarted]"
@@ -4533,7 +4528,6 @@ while true; do
     while [ "$timer" -ne "$timerloop" ]
       do
         timer=$(($timer+1))
-        preparebar 46 "|"
         progressbaroverride $timer "$timerloop" "" "s" "Standard"
         if [ "$resettimer" == "1" ]; then timer=$timerloop; fi
       done

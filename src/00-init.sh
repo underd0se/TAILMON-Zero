@@ -101,3 +101,7 @@ cleanup() {
 }
 trap cleanup EXIT ERR INT TERM
 
+
+# Progressbar variables (optimized)
+barlen=46
+barspaces="                                              "

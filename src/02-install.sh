@@ -424,8 +424,7 @@ startts()
           while [ $timer -le 5 ]
           do
             timer="$((timer+1))"
-            preparebar 46 "|"
-            progressbarpause $timer 5 "" "s" "Standard"
+                progressbarpause $timer 5 "" "s" "Standard"
           done
           printf "\33[2K\r"
       fi
@@ -585,8 +584,7 @@ tsup()
             while [ $timer -le 5 ]
             do
               timer="$((timer+1))"
-              preparebar 46 "|"
-              progressbarpause $timer 5 "" "s" "Standard"
+                    progressbarpause $timer 5 "" "s" "Standard"
             done
             printf "\33[2K\r"
         fi
@@ -604,8 +602,7 @@ tsup()
             while [ $timer -le 5 ]
             do
               timer="$((timer+1))"
-              preparebar 46 "|"
-              progressbarpause $timer 5 "" "s" "Standard"
+                    progressbarpause $timer 5 "" "s" "Standard"
             done
             printf "\33[2K\r"
         fi

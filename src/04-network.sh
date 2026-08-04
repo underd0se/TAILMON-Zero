@@ -421,9 +421,7 @@ while true; do
          if [ "$newratelimit" = "e" ]
          then
              echo -e "\n[Exiting]"; sleep 2
-         elif echo "$newratelimit" | grep -qE "^(0|[1-9][0-9]{0,3})$" && \
-             [ "$newratelimit" -ge 0 ] && [ "$newratelimit" -le 9999 ]
-         then
+         elif [ "$newratelimit" -ge 0 ] 2>/dev/null && [ "$newratelimit" -le 9999 ] 2>/dev/null; then
              ratelimit="$newratelimit"
              echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: New Email Rate Limit entered (per hour): $ratelimit" >> "$logfile"
              saveconfig

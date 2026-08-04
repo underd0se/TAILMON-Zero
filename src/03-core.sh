@@ -115,7 +115,7 @@ autoupdate()
       sleep 1
 
       # Checking for local Tailscale version
-      echo $(tailscale version | awk 'NR==1 {print $1}') > /jffs/addons/tailmon.d/localtsver.txt
+      tailscale version | awk 'NR==1 {print $1}' > /jffs/addons/tailmon.d/localtsver.txt
       localtsverchk=$?
       if [ $localtsverchk -ne 0 ]
         then
@@ -134,7 +134,7 @@ autoupdate()
       sleep 1
 
       # Checking for upstream Tailscale version
-      echo $(tailscale version --upstream | grep "upstream" | cut -d ':' -f 2) > /jffs/addons/tailmon.d/tsversion.txt
+      tailscale version --upstream | awk -F":" '/upstream/ {print $2}' | sed "s/^ //" > /jffs/addons/tailmon.d/tsversion.txt
       upstreamtsverchk=$?
       if [ $upstreamtsverchk -ne 0 ]
         then
@@ -611,16 +611,14 @@ done
 _ValidateCronJobHour_()
 {
    if [ $# -eq 0 ] || [ -z "$1" ] ; then return 1 ; fi
-   if echo "$1" | grep -qE "^(0|[1-9][0-9]?)$" && \
-      [ "$1" -ge 0 ] && [ "$1" -lt 24 ]
+   if [ "$1" -ge 0 ] 2>/dev/null && [ "$1" -lt 24 ] 2>/dev/null
    then return 0 ; else return 1 ; fi
 }
 
 _ValidateCronJobMinute_()
 {
     if [ $# -eq 0 ] || [ -z "$1" ] ; then return 1 ; fi
-    if echo "$1" | grep -qE "^(0|[1-9][0-9]?)$" && \
-       [ "$1" -ge 0 ] && [ "$1" -lt 60 ]
+    if [ "$1" -ge 0 ] 2>/dev/null && [ "$1" -lt 60 ] 2>/dev/null
     then return 0 ; else return 1 ; fi
 }
 
@@ -790,21 +788,21 @@ while true; do
   echo -e "${InvGreen} ${CClear}"
   echo -e "${InvGreen} ${CClear} Current values in Tailscale Service (/opt/etc/init.d/S06tailscaled):${CClear}"
 
-  s06args=$(cat /opt/etc/init.d/S06tailscaled | grep ^ARGS= | cut -d '=' -f 2-) 2>/dev/null
+  s06args=$(sed -n 's/^ARGS=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
   if [ -z "$s06args" ]; then
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(1)${CClear} ${CGreen}ARGS=\"\"${CClear}"
   else
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(1)${CClear} ${CGreen}ARGS=$s06args${CClear}"
   fi
 
-  s06preargs=$(cat /opt/etc/init.d/S06tailscaled | grep ^PREARGS= | cut -d '=' -f 2-) 2>/dev/null
+  s06preargs=$(sed -n 's/^PREARGS=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
   if [ -z "$s06preargs" ]; then
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(2)${CClear} ${CGreen}PREARGS=\"\"${CClear}"
   else
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(2)${CClear} ${CGreen}PREARGS=$s06preargs${CClear}"
   fi
 
-  s06precmd=$(cat /opt/etc/init.d/S06tailscaled | grep ^PRECMD= | cut -d '=' -f 2-) 2>/dev/null
+  s06precmd=$(sed -n 's/^PRECMD=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
   if [ -z "$s06precmd" ]; then
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(3)${CClear} ${CGreen}PRECMD=\"\"${CClear}"
   else

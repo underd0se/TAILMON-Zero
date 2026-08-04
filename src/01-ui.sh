@@ -159,7 +159,7 @@ readmenucommand()
 {
   key_press=""
   menu_line_submitted=0
-  ttydev="$(tty 2>/dev/null)"
+  if [ -z "$ttydev" ]; then ttydev="$(tty 2>/dev/null)"; fi
 
   if [ -z "$ttydev" ] || [ "$ttydev" = "not a tty" ]; then
     return 1
@@ -211,7 +211,7 @@ drainpendingttyinput()
 {
   local ttydev discarded_input
 
-  ttydev="$(tty 2>/dev/null)"
+  if [ -z "$ttydev" ]; then ttydev="$(tty 2>/dev/null)"; fi
   if [ -z "$ttydev" ] || [ "$ttydev" = "not a tty" ]; then
     return 0
   fi

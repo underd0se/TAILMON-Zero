@@ -116,7 +116,7 @@ trimlogs()
 {
   if [ "$logsize" -gt 0 ]
   then
-      currlogsize="$(wc -l "$logfile" | awk '{ print $1 }')" # Determine the number of rows in the log
+      currlogsize="$(wc -l < "$logfile")" # Determine the number of rows in the log
 
       if [ "$currlogsize" -gt "$logsize" ] # If it's bigger than the max allowed, tail/trim it!
       then
@@ -288,7 +288,7 @@ if [ "$1" == "-screen" ]
 
     /opt/sbin/screen -wipe >/dev/null 2>&1 # Kill any dead screen sessions
     sleep 1
-    ScreenSess=$(/opt/sbin/screen -ls | grep "tailmon" | awk '{print $1}' | cut -d . -f 1)
+    ScreenSess=$(/opt/sbin/screen -ls | awk '/tailmon/ {split($1,a,"."); print a[1]}')
       if [ -z "$ScreenSess" ]; then
         if [ "$bypassscreentimer" == "1" ]; then
           /opt/sbin/screen -dmS "tailmon" "$apppath" -noswitch
@@ -455,8 +455,8 @@ while true; do
         fi
     fi
 
-    tzone=$(date +%Z)
-    tzonechars=$(echo ${#tzone})
+    if [ -z "$tzone" ]; then tzone=$(date +%Z); fi
+    tzonechars=${#tzone}
 
     if [ "$tzonechars" = 1 ]; then tzspaces="        ";
     elif [ "$tzonechars" = 2 ]; then tzspaces="       ";
@@ -561,7 +561,7 @@ while true; do
   #Determine if S06tailscaled service settings have changed
   if [ $tsinstalled -eq 1 ] && [ "$persistentsettings" -eq 1 ]; then
 
-    s06args=$(cat /opt/etc/init.d/S06tailscaled | grep ^ARGS= | cut -d '=' -f 2-) 2>/dev/null
+    s06args=$(sed -n 's/^ARGS=//p' /opt/etc/init.d/S06tailscaled) 2>/dev/null
     tailmonargs="\"$args\""
 
     if [ "$s06args" != "$tailmonargs" ]; then
@@ -619,13 +619,11 @@ while true; do
     sendmessage 1 "Tailscale Service Restarted"
   fi
 
-  #Determine if router rebooted
-  #uptime=$(awk '{printf("%03dd %02dh %02dm %02ds\n",($1/60/60/24),($1/60/60%24),($1/60%60),($1%60))}' /proc/uptime)
-  uptimedays=$(awk '{printf("%1d\n",($1/60/60/24))}' /proc/uptime)
-  uptimehrs=$(awk '{printf("%1d\n",($1/60/60%24))}' /proc/uptime)
-  uptimemins=$(awk '{printf("%1d\n",($1/60%60))}' /proc/uptime)
-
-  if [ "$uptimedays" -eq 0 ] && [ "$uptimehrs" -eq 0 ] && [ "$uptimemins" -le 10 ] && [ "$routerboot" -eq 0 ]; then
+  #Determine if router rebooted (uptime < 10 mins)
+  read -r uptime_sec _ < /proc/uptime
+  uptime_sec="${uptime_sec%.*}"
+  
+  if [ "$uptime_sec" -le 600 ] && [ "$routerboot" -eq 0 ]; then
     # Router must have rebooted and send a notification
     printf "\33[2K\r"
     printf "${CGreen}\r[Router appears to have been restarted]"
@@ -642,7 +640,6 @@ while true; do
     while [ "$timer" -ne "$timerloop" ]
       do
         timer=$(($timer+1))
-        preparebar 46 "|"
         progressbaroverride $timer "$timerloop" "" "s" "Standard"
         if [ "$resettimer" == "1" ]; then timer=$timerloop; fi
       done
