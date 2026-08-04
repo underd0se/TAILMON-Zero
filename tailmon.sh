@@ -69,24 +69,16 @@ readonly CUSTOM_EMAIL_LIBName="CustomEMailFunctions.lib.sh"
 readonly CUSTOM_EMAIL_LIBFile="${CUSTOM_EMAIL_LIBDir}/$CUSTOM_EMAIL_LIBName"
 
 # Color variables
-CBlack="\e[1;30m"
-InvBlack="\e[1;40m"
 CRed="\e[1;31m"
 InvRed="\e[1;41m"
 CGreen="\e[1;32m"
 InvGreen="\e[1;42m"
 CDkGray="\e[1;90m"
 InvDkGray="\e[1;100m"
-InvLtGray="\e[1;47m"
 CYellow="\e[1;33m"
 InvYellow="\e[1;43m"
-CBlue="\e[1;34m"
-InvBlue="\e[1;44m"
-CMagenta="\e[1;35m"
 CCyan="\e[1;36m"
-InvCyan="\e[1;46m"
 CWhite="\e[1;37m"
-InvWhite="\e[1;107m"
 CClear="\e[0m"
 
 # To support automatic script updates from AMTM #
@@ -102,68 +94,76 @@ doScriptUpdateFromAMTM=true
 logoNM ()
 {
   clear
-  echo ""
-  echo ""
-  echo ""
-  echo -e "${CDkGray}                      _________    ______    __  _______  _   __"
-  echo -e "                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /"
-  echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
-  echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
-  echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
-  echo -e "                                      [  Z  E  R  0  ]"
-  echo ""
-  echo ""
-  printf "\r                            ${CGreen}    [ INITIALIZING ]     ${CClear}"
+  cat <<EOF
+
+
+
+${CDkGray}                      _________    ______    __  _______  _   __
+                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
+                      / / / /| |  / // /   / /|_/ / / / /  |/ /
+                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /
+                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version
+                                      [  Z  E  R  0  ]
+
+
+EOF
+  printf "%s" "\r                            ${CGreen}    [ INITIALIZING ]     ${CClear}"
   sleep 1
   clear
-  echo ""
-  echo ""
-  echo ""
-  echo -e "${CYellow}                      _________    ______    __  _______  _   __"
-  echo -e "                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /"
-  echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
-  echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
-  echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
-  echo -e "                                      [  Z  E  R  0  ]"
-  echo ""
-  echo ""
-  printf "\r                            ${CGreen}[ INITIALIZING ... DONE ]${CClear}"
+  cat <<EOF
+
+
+
+${CYellow}                      _________    ______    __  _______  _   __
+                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
+                      / / / /| |  / // /   / /|_/ / / / /  |/ /
+                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /
+                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version
+                                      [  Z  E  R  0  ]
+
+
+EOF
+  printf "%s" "\r                            ${CGreen}[ INITIALIZING ... DONE ]${CClear}"
   sleep 1
-  printf "\r                            ${CGreen}      [ LOADING... ]     ${CClear}"
+  printf "%s" "\r                            ${CGreen}      [ LOADING... ]     ${CClear}"
   sleep 1
 }
 
 logoNMexit ()
 {
   clear
-  echo ""
-  echo ""
-  echo ""
-  echo -e "${CYellow}                      _________    ______    __  _______  _   __"
-  echo -e "                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /"
-  echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
-  echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
-  echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
-  echo -e "                                      [  Z  E  R  0  ]"
-  echo ""
-  echo ""
-  printf "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
+  cat <<EOF
+
+
+
+${CYellow}                      _________    ______    __  _______  _   __
+                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
+                      / / / /| |  / // /   / /|_/ / / / /  |/ /
+                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /
+                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version
+                                      [  Z  E  R  0  ]
+
+
+EOF
+  printf "%s" "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
   sleep 1
   clear
-  echo ""
-  echo ""
-  echo ""
-  echo -e "${CDkGray}                      _________    ______    __  _______  _   __"
-  echo -e "                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /"
-  echo -e "                      / / / /| |  / // /   / /|_/ / / / /  |/ /"
-  echo -e "                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /"
-  echo -e "                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version"
-  echo -e "                                      [  Z  E  R  0  ]"
-  echo ""
-  echo ""
-  printf "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
+  cat <<EOF
+
+
+
+${CDkGray}                      _________    ______    __  _______  _   __
+                     /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
+                      / / / /| |  / // /   / /|_/ / / / /  |/ /
+                     / / / ___ |_/ // /___/ /  / / /_/ / /|  /
+                    /_/ /_/  |_/___/_____/_/  /_/\____/_/ |_/ v$version
+                                      [  Z  E  R  0  ]
+
+
+EOF
+  printf "%s" "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
   sleep 1
-  printf "\r                            ${CDkGray}      [ GOODBYE... ]     ${CClear}\n\n"
+  printf "%s" "\r                            ${CDkGray}      [ GOODBYE... ]     ${CClear}\n\n"
   sleep 1
 }
 
@@ -193,7 +193,7 @@ spinner()
   totalspins=$((spins / 4))
   while [ $spin -le $totalspins ]; do
     for spinchar in / - \\ \|; do
-      printf "\r$spinchar"
+      printf \"%s\" "\r$spinchar"
       sleep 1
     done
     spin=$((spin+1))
@@ -344,7 +344,7 @@ progressbaroverride()
   [ "$1" -eq 1 ] && progresspromptactive=0
 
   if [ $1 -eq -1 ]; then
-    printf "\r  $barspaces\r"
+    printf \"%s\" "\r  $barspaces\r"
   else
     if [ ! -z $7 ] && [ $1 -ge $7 ]; then
       barch=$(($7*barlen/$2))
@@ -402,7 +402,7 @@ progressbarpause()
 
   if [ "$1" -eq -1 ]
   then
-     printf "\r  $barspaces\r"
+     printf \"%s\" "\r  $barspaces\r"
   else
     if [ $# -gt 6 ] && [ -n "$7" ] && [ "$1" -ge "$7" ]
     then
@@ -1306,10 +1306,10 @@ autoupdate()
 
           if [ "$track" = "1" ]
             then
-            printf "${CGreen}\r[Downloading New TAILMON BETA v$serverver]\n"
+            printf \"%s\" "${CGreen}\r[Downloading New TAILMON BETA v$serverver]\n"
             curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/develop/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh"
           else
-            printf "${CGreen}\r[Downloading New TAILMON STABLE v$serverver]\n"
+            printf \"%s\" "${CGreen}\r[Downloading New TAILMON STABLE v$serverver]\n"
             curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh"
           fi
 
@@ -1396,7 +1396,7 @@ autoupdate()
       if [ "$localtsver" != "$servertsver" ]
         then
           printf "\33[2K\r"
-          printf "${CGreen}\r[Downloading New Tailscale Binary v$servertsver]\n"
+          printf \"%s\" "${CGreen}\r[Downloading New Tailscale Binary v$servertsver]\n"
           echo -e "${CClear}"
           sleep 1
           mkdir -p /opt/tmp
@@ -2841,7 +2841,7 @@ _DownloadCEMLibraryFile_()
    else
        retCode=1
        printf "\33[2K\r"
-       printf "${CRed}\r[ERROR: Unable to download the shared library script file ($CUSTOM_EMAIL_LIBName).]${CClear}"
+       printf \"%s\" "${CRed}\r[ERROR: Unable to download the shared library script file ($CUSTOM_EMAIL_LIBName).]${CClear}"
        echo -e "$(date +'%b %d %Y %X') $(nvram get lan_hostname) TAILMON[$$] - **ERROR**: Unable to download the shared AMTM email library script file [$CUSTOM_EMAIL_LIBName]." >> $logfile
    fi
    return "$retCode"
@@ -2859,7 +2859,7 @@ _SendEMailNotification_()
    if [ -z "${amtmIsEMailConfigFileEnabled:+xSETx}" ]
    then
        printf "\33[2K\r"
-       printf "${CRed}\r[ERROR: Email library script ($CUSTOM_EMAIL_LIBFile) *NOT* FOUND.]${CClear}"
+       printf \"%s\" "${CRed}\r[ERROR: Email library script ($CUSTOM_EMAIL_LIBFile) *NOT* FOUND.]${CClear}"
        sleep 5
        echo -e "$(date +'%b %d %Y %X') $(nvram get lan_hostname) TAILMON[$$] - **ERROR**: Email library script [$CUSTOM_EMAIL_LIBFile] *NOT* FOUND." >> $logfile
        return 1
@@ -2884,12 +2884,12 @@ _SendEMailNotification_()
    if [ "$retCode" -eq 0 ]
    then
      printf "\33[2K\r"
-     printf "${CGreen}\r[Email notification was sent successfully ($2)]${CClear}"
+     printf \"%s\" "${CGreen}\r[Email notification was sent successfully ($2)]${CClear}"
      echo -e "$(date +'%b %d %Y %X') $(nvram get lan_hostname) TAILMON[$$] - INFO: Email notification was sent successfully [$2]" >> $logfile
      sleep 5
    else
      printf "\33[2K\r"
-     printf "${CRed}\r[ERROR: Failure to send email notification (Error Code: $retCode - $2).]${CClear}"
+     printf \"%s\" "${CRed}\r[ERROR: Failure to send email notification (Error Code: $retCode - $2).]${CClear}"
      echo -e "$(date +'%b %d %Y %X') $(nvram get lan_hostname) TAILMON[$$] - **ERROR**: Failure to send email notification [$2]" >> $logfile
      sleep 5
    fi
@@ -3024,8 +3024,8 @@ fi
           {
           printf "<b>Date/Time:</b> $(date +'%b %d %Y %X')\n"
           printf "\n"
-          printf "<b>SUCCESS: TAILMON</b> detected that the installed script (v$3) did not match the configured\n"
-          printf "update track and has corrected it to the appropriate version (v$4) via autoupdate.\n"
+          printf \"%s\" "<b>SUCCESS: TAILMON</b> detected that the installed script (v$3) did not match the configured\n"
+          printf \"%s\" "update track and has corrected it to the appropriate version (v$4) via autoupdate.\n"
           printf "\n"
           } > "$tmpEMailBodyFile"
         else
@@ -3070,7 +3070,7 @@ awk -v cutoff="$cutoff_time" '$1 > cutoff' "$tmemails" > "$tmemailstemp"
 recent_email_count=$(wc -l < "$tmemailstemp" | tr -d ' ')
 
 printf "\33[2K\r"
-printf "${CGreen}\r[Checking email rate limit... $recent_email_count/$ratelimit emails sent within the last hour]"
+printf \"%s\" "${CGreen}\r[Checking email rate limit... $recent_email_count/$ratelimit emails sent within the last hour]"
 sleep 2
 
 #logic to determine if rate limit has been hit
