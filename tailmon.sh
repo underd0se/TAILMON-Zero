@@ -608,7 +608,7 @@ expressinstall()
     expressinstallfail "Unable to apply the Userspace ARGS setting to S06tailscaled."
   fi
 
-  if ! sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"; then
+  if ! sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"; then
     expressinstallfail "Unable to apply the Userspace PREARGS setting to S06tailscaled."
   fi
 
@@ -2305,7 +2305,7 @@ done
 applyuserspacemode()
 {
   sed -i "s/^ARGS=.*/ARGS=\"--tun=userspace-networking\ --state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"
   sed -i -e '/^PRECMD=/d' "/opt/etc/init.d/S06tailscaled"
 
   #remove firewall-start entry if found
@@ -2334,7 +2334,7 @@ applykernelmode()
     sed -i "s/^PRECMD=.*/PRECMD=\"modprobe tun\"/" "/opt/etc/init.d/S06tailscaled"
   fi
   sed -i "s/^ARGS=.*/ARGS=\"--state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"
 
   #modify/create firewall-start
   if [ -f /jffs/scripts/firewall-start ]; then
@@ -2367,7 +2367,7 @@ applycustommode()
     sed -i "s/^PRECMD=.*/PRECMD=\"modprobe tun\"/" "/opt/etc/init.d/S06tailscaled"
   fi
   sed -i "s/^ARGS=.*/ARGS=\"--state=\/opt\/var\/tailscaled.state\ --statedir=\/opt\/var\/lib\/tailscale\"/" "/opt/etc/init.d/S06tailscaled"
-  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1\"/" "/opt/etc/init.d/S06tailscaled"
+  sed -i "s/^PREARGS=.*/PREARGS=\"nohup env GOMAXPROCS=1 GOMEMLIMIT=20MiB GOGC=20\"/" "/opt/etc/init.d/S06tailscaled"
 
   #modify/create firewall-start
   if [ -f /jffs/scripts/firewall-start ]; then
