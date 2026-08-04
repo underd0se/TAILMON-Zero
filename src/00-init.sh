@@ -88,3 +88,16 @@ doScriptUpdateFromAMTM=true
 # FUNCTIONS BEGIN
 # -------------------------------------------------------------------------------------------------------------------------
 
+
+# -------------------------------------------------------------------------------------------------------------------------
+# Global Trap Cleanup
+# -------------------------------------------------------------------------------------------------------------------------
+cleanup() {
+  local exit_code=$?
+  rm -f /opt/tmp/tailscaled 2>/dev/null
+  rm -f /jffs/scripts/tailmon.sh.tmp 2>/dev/null
+  # Exit cleanly with the original exit code
+  exit "$exit_code"
+}
+trap cleanup EXIT ERR INT TERM
+

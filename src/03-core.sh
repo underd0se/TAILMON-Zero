@@ -57,11 +57,11 @@ autoupdate()
 
       # Check differences in version and download if newer official version is present
       if [ "$track" = "1" ]; then
-        localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
-        serverver=$(cat "/jffs/addons/tailmon.d/beta.txt")
+        local localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
+        local serverver=$(cat "/jffs/addons/tailmon.d/beta.txt")
       else
-        localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
-        serverver=$(cat "/jffs/addons/tailmon.d/version.txt")
+        local localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
+        local serverver=$(cat "/jffs/addons/tailmon.d/version.txt")
       fi
       if [ "$localver" != "$serverver" ]
         then

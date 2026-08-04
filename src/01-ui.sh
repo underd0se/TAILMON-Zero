@@ -97,7 +97,7 @@ promptyn()
 
 spinner()
 {
-  spins=$1
+  local spins=$1
 
   spin=0
   totalspins=$((spins / 4))
@@ -257,13 +257,13 @@ progressbaroverride()
     printf \"%s\" "\r  $barspaces\r"
   else
     if [ ! -z "$7" ] && [ "$1" -ge "$7" ]; then
-      barch=$(($7*barlen/$2))
-      barsp=$((barlen-barch))
-      progr=$((100*$1/$2))
+      local barch=$(($7*barlen/$2))
+      local barsp=$((barlen-barch))
+      local progr=$((100*$1/$2))
     else
-      barch=$(($1*barlen/$2))
-      barsp=$((barlen-barch))
-      progr=$((100*$1/$2))
+      local barch=$(($1*barlen/$2))
+      local barsp=$((barlen-barch))
+      local progr=$((100*$1/$2))
     fi
 
     if [ ! -z "$6" ]; then AltNum=$6; else AltNum=$1; fi
@@ -316,13 +316,13 @@ progressbarpause()
   else
     if [ $# -gt 6 ] && [ -n "$7" ] && [ "$1" -ge "$7" ]
     then
-       barch="$(($7*barlen/$2))"
-       barsp="$((barlen-barch))"
-       progr="$((100*$1/$2))"
+       local barch="$(($7*barlen/$2))"
+       local barsp="$((barlen-barch))"
+       local progr="$((100*$1/$2))"
     else
-       barch="$(($1*barlen/$2))"
-       barsp="$((barlen-barch))"
-       progr="$((100*$1/$2))"
+       local barch="$(($1*barlen/$2))"
+       local barsp="$((barlen-barch))"
+       local progr="$((100*$1/$2))"
     fi
 
     if [ $# -gt 5 ] && [ -n "$6" ]; then AltNum="$6" ; else AltNum="$1" ; fi

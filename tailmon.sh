@@ -88,6 +88,19 @@ doScriptUpdateFromAMTM=true
 # FUNCTIONS BEGIN
 # -------------------------------------------------------------------------------------------------------------------------
 
+
+# -------------------------------------------------------------------------------------------------------------------------
+# Global Trap Cleanup
+# -------------------------------------------------------------------------------------------------------------------------
+cleanup() {
+  local exit_code=$?
+  rm -f /opt/tmp/tailscaled 2>/dev/null
+  rm -f /jffs/scripts/tailmon.sh.tmp 2>/dev/null
+  # Exit cleanly with the original exit code
+  exit "$exit_code"
+}
+trap cleanup EXIT ERR INT TERM
+
 # -------------------------------------------------------------------------------------------------------------------------
 # LogoNM is a function that displays the BACKUPMON script name in a cool ASCII font without menu options
 
@@ -187,7 +200,7 @@ promptyn()
 
 spinner()
 {
-  spins=$1
+  local spins=$1
 
   spin=0
   totalspins=$((spins / 4))
@@ -347,13 +360,13 @@ progressbaroverride()
     printf \"%s\" "\r  $barspaces\r"
   else
     if [ ! -z "$7" ] && [ "$1" -ge "$7" ]; then
-      barch=$(($7*barlen/$2))
-      barsp=$((barlen-barch))
-      progr=$((100*$1/$2))
+      local barch=$(($7*barlen/$2))
+      local barsp=$((barlen-barch))
+      local progr=$((100*$1/$2))
     else
-      barch=$(($1*barlen/$2))
-      barsp=$((barlen-barch))
-      progr=$((100*$1/$2))
+      local barch=$(($1*barlen/$2))
+      local barsp=$((barlen-barch))
+      local progr=$((100*$1/$2))
     fi
 
     if [ ! -z "$6" ]; then AltNum=$6; else AltNum=$1; fi
@@ -406,13 +419,13 @@ progressbarpause()
   else
     if [ $# -gt 6 ] && [ -n "$7" ] && [ "$1" -ge "$7" ]
     then
-       barch="$(($7*barlen/$2))"
-       barsp="$((barlen-barch))"
-       progr="$((100*$1/$2))"
+       local barch="$(($7*barlen/$2))"
+       local barsp="$((barlen-barch))"
+       local progr="$((100*$1/$2))"
     else
-       barch="$(($1*barlen/$2))"
-       barsp="$((barlen-barch))"
-       progr="$((100*$1/$2))"
+       local barch="$(($1*barlen/$2))"
+       local barsp="$((barlen-barch))"
+       local progr="$((100*$1/$2))"
     fi
 
     if [ $# -gt 5 ] && [ -n "$6" ]; then AltNum="$6" ; else AltNum="$1" ; fi
@@ -1294,11 +1307,11 @@ autoupdate()
 
       # Check differences in version and download if newer official version is present
       if [ "$track" = "1" ]; then
-        localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
-        serverver=$(cat "/jffs/addons/tailmon.d/beta.txt")
+        local localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
+        local serverver=$(cat "/jffs/addons/tailmon.d/beta.txt")
       else
-        localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
-        serverver=$(cat "/jffs/addons/tailmon.d/version.txt")
+        local localver=$(cat "/jffs/addons/tailmon.d/localver.txt")
+        local serverver=$(cat "/jffs/addons/tailmon.d/version.txt")
       fi
       if [ "$localver" != "$serverver" ]
         then
