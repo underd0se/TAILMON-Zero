@@ -1,16 +1,25 @@
-# TAILMON v1.4.0
-Asus-Merlin Tailscale Installer, Configurator and Monitor
-
-Updated: 2026-Aug-02
+# TAILMON ZER0 v0.1.0
+Asus-Merlin Tailscale Installer, Configurator and Monitor (Swapless Edition)
 
 ---
 
-<img width="1083" height="677" alt="image" src="https://github.com/user-attachments/assets/f3eb43a0-c43f-4f5b-90e4-2be7d7d659f7" />
+**Original Project:** This is a fork of the amazing [TAILMON](https://github.com/ViktorJp/TAILMON) project originally created by ViktorJp. All credit for the core implementation and terminal UI goes to the original author. 
+
+### Why TAILMON ZER0?
+TAILMON ZER0 was created to explicitly support Asuswrt-Merlin routers running **without swap space** (e.g. strict 512MB RAM limits) which natively causes Go-based `tailscaled` binaries to crash with `Segmentation fault` on startup. 
+
+**Key Changes from Upstream:**
+- **Dynamic Swapless Overcommit Bypass:** Safely tracks and conditionally injects `vm.overcommit_memory=0` during boot for swapless routers, natively integrated into Tailmon's `saveconfig()` to guarantee restoration upon uninstall.
+- **Zero NVRAM Footprint:** Complete removal of deprecated/messy NVRAM variable storage for memory management tracking.
+- **Aggressive Memory Tuning:** Hardcoded `GOMEMLIMIT=20MiB`, `GOGC=20`, and `GOMAXPROCS=1` via explicit native `export` declarations inside the `S06tailscaled` init script.
+- **Independent Autoupdates:** Fully severed from the upstream TAILMON repo, pointing all internal installation and autoupdate `curl` endpoints directly to this `underd0se/TAILMON-Zero` repository.
 
 ---
 
-**Executive Summary:** **Tailscale** is a free and open source service, based on WireGuard®, that helps users build no-hassle virtual private networks. Once you’ve created a Tailscale network (tailnet), you can securely access services and devices on that tailnet from anywhere in the world.  **TAILMON** is a posix shell script that assists with the install, configuration and monitoring of Tailscale, running on your Asus-Merlin FW router.
+### Installation
+To install TAILMON ZER0 via SSH on your Asuswrt-Merlin router, simply run:
+```sh
+curl --silent --retry 3 "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh" && sh /jffs/scripts/tailmon.sh
+```
 
-**Use-case:** **TAILMON** allows you to download and install Tailscale via Entware onto your router, in order to join your router to your Tailscale network (tailnet). When joined, you can optionally designate your router to become an exit node, and/or advertise access to your subnet in order to allow access to devices running on your network… think NAS devices, TVs, Raspberry Pi’s, Ubuntu servers, security cameras.  Once installed, you can monitor your Tailscale service and connection with TAILMON, which will optionally restart the service/connection should something bring it down. To make life easier, TAILMON can continue running/monitoring in the background using the SCREEN utility.
-
-Support and discussion forum available here: https://www.snbforums.com/threads/tailmon-v1-3-4-2026-jul-12-wireguard-based-tailscale-installer-configurator-and-monitor-available-in-amtm.97556/
+*(For support and discussion regarding the original upstream project, visit the [SNBForums Thread](https://www.snbforums.com/threads/tailmon-v1-3-4-2026-jul-12-wireguard-based-tailscale-installer-configurator-and-monitor-available-in-amtm.97556/)).*
