@@ -1087,7 +1087,7 @@ inject_s06tailscaled()
     sed -i '/swap_total=$(free/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/if \[ "$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
-    sed -i '/fi/d' "/opt/etc/init.d/S06tailscaled"
+    # Removed generic /fi/d to prevent breaking S06tailscaled
 
     # Inject new logic
     awk 'NR==2{print "# TAILMON Zero: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"')"; print "if [ \"$swap_total\" = \"0\" ]; then"; print "    echo 0 > /proc/sys/vm/overcommit_memory"; print "fi"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"

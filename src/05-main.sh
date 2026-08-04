@@ -21,6 +21,24 @@ vuninstall()
             echo -e "\n${CGreen}Restoring vm.overcommit_memory to $old_overcommit...${CClear}"
             echo "$old_overcommit" > /proc/sys/vm/overcommit_memory 2>/dev/null
           fi
+          
+          # Strip TAILMON memory injections from S06tailscaled
+          if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
+            sed -i '/# TAILMON Zero: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
+            sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
+            sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
+            sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
+            sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
+            sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
+            sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
+            # Note: We do not blindly delete 'fi' here to avoid breaking the script.
+          fi
+          
+          # Clean up any residual temporary download files
+          rm -f /opt/tmp/tailscaled 2>/dev/null
+          rm -f /opt/tmp/tailscale 2>/dev/null
+          rm -f /jffs/scripts/tailmon.sh.tmp 2>/dev/null
+
           rm -f -r /jffs/addons/tailmon.d >/dev/null 2>&1
           rm -f /jffs/scripts/tailmon.sh >/dev/null 2>&1
           sed -i -e '/tailmon.sh/d' /jffs/scripts/post-mount >/dev/null 2>&1
