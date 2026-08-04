@@ -32,6 +32,7 @@ vuninstall()
           rm -f -r /jffs/addons/tailmon.d >/dev/null 2>&1
           rm -f /jffs/scripts/tailmon.sh >/dev/null 2>&1
           sed -i -e '/tailmon.sh/d' /jffs/scripts/post-mount >/dev/null 2>&1
+          sed -i -e '/tailmon.sh/d' /jffs/configs/profile.add >/dev/null 2>&1
           echo ""
           echo -e "\n${CGreen}TAILMON has been uninstalled...${CClear}"
           echo ""
@@ -65,6 +66,7 @@ vuninstall()
                 else
                   opkg remove tailscale_nohf #remove special tailscale package for arm7 kernel 2.6
                 fi
+                rm -f /opt/etc/init.d/S06tailscaled >/dev/null 2>&1
                 rm -f /opt/var/tailscaled.state >/dev/null 2>&1
                 rm -r /opt/var/lib/tailscale >/dev/null 2>&1
                 rm -r /opt/var/run/tailscale >/dev/null 2>&1
