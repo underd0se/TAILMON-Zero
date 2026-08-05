@@ -734,7 +734,7 @@ fi
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
-# installdependencies checks for existence of entware, and if so proceed and install the packages, then run tailmon -config
+# installdependencies checks for existence of entware, and if so proceed and install the packages, then run tailmon-zero -config
 
 installdependencies()
 {
@@ -955,8 +955,8 @@ vsetup()
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}(11)${CClear} : Uninstall TAILMON${CClear}"
     echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}  | ${CClear}"
     if tailscaleready; then
-      echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}( L)${CClear} : Launch TAILMON in Monitoring Mode (${CGreen}sh /jffs/scripts/tailmon.sh${CClear})"
-      echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}( M)${CClear} : Launch TAILMON in Monitoring Mode using SCREEN (${CGreen}sh /jf..ts/tailmon.sh -screen${CClear})"
+      echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}( L)${CClear} : Launch TAILMON in Monitoring Mode (${CGreen}sh /jffs/scripts/tailmon-zero.sh${CClear})"
+      echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}( M)${CClear} : Launch TAILMON in Monitoring Mode using SCREEN (${CGreen}sh /jf..ts/tailmon-zero.sh -screen${CClear})"
     else
       echo -e "${InvGreen} ${CClear} ${InvDkGray}( L) : Launch TAILMON in Monitoring Mode              : Unavailable (install Tailscale first)${CClear}"
       echo -e "${InvGreen} ${CClear} ${InvDkGray}( M) : Launch TAILMON using SCREEN                   : Unavailable (install Tailscale first)${CClear}"
@@ -989,7 +989,7 @@ vsetup()
 
         [Ll])
           if tailscaleready; then
-            exec sh /jffs/scripts/tailmon.sh -noswitch
+            exec sh /jffs/scripts/tailmon-zero.sh -noswitch
           else
             monitoringblocked pause
           fi
@@ -997,7 +997,7 @@ vsetup()
 
         [Mm])
           if tailscaleready; then
-            exec sh /jffs/scripts/tailmon.sh -screen -now
+            exec sh /jffs/scripts/tailmon-zero.sh -screen -now
           else
             monitoringblocked pause
           fi
@@ -1052,7 +1052,7 @@ vsetup()
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
-# vconfig is a function that provides a UI to choose various options for tailmon
+# vconfig is a function that provides a UI to choose various options for tailmon-zero
 
 vconfig()
 {
@@ -1295,13 +1295,13 @@ vupdate()
           [Yy])
             echo ""
             echo -e "\nDownloading TAILMON ${CGreen}STABLE${CClear}"
-            curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh"
+            curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh"
             echo ""
             echo -e "Download successful!${CClear}"
             echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON update successfully downloaded and installed." >> "$logfile"
             echo ""
             read -rsp $'Press any key to restart TAILMON...\n' -n1 key
-            exec /jffs/scripts/tailmon.sh -setup
+            exec /jffs/scripts/tailmon-zero.sh -setup
             ;;
 
           [Nn])
@@ -1339,13 +1339,13 @@ vupdate()
           [Yy])
             echo ""
             echo -e "\nDownloading TAILMON ${CGreen}STABLE${CClear}"
-            curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh"
+            curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh"
             echo ""
             echo -e "Download successful!${CClear}"
             echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON update successfully downloaded and installed." >> "$logfile"
             echo ""
             read -rsp $'Press any key to restart TAILMON...\n' -n1 key
-            exec /jffs/scripts/tailmon.sh -setup
+            exec /jffs/scripts/tailmon-zero.sh -setup
             ;;
 
           [Nn])
@@ -1386,13 +1386,13 @@ vupdate()
             [Yy])
               echo ""
               echo -e "\nDownloading TAILMON ${CGreen}BETA${CClear}"
-              curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/develop/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh"
+              curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/beta/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh"
               echo ""
               echo -e "Download successful!${CClear}"
               echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON BETA update successfully downloaded and installed." >> "$logfile"
               echo ""
               read -rsp $'Press any key to restart TAILMON...\n' -n1 key
-              exec /jffs/scripts/tailmon.sh -setup
+              exec /jffs/scripts/tailmon-zero.sh -setup
               ;;
 
             [Nn])
@@ -1431,13 +1431,13 @@ vupdate()
             [Yy])
               echo ""
               echo -e "\nDownloading TAILMON ${CGreen}BETA${CClear}"
-              curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/develop/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh"
+              curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/beta/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh"
               echo ""
               echo -e "Download successful!${CClear}"
               echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON BETA update successfully downloaded and installed." >> "$logfile"
               echo ""
               read -rsp $'Press any key to restart TAILMON...\n' -n1 key
-              exec /jffs/scripts/tailmon.sh -setup
+              exec /jffs/scripts/tailmon-zero.sh -setup
               ;;
 
             [Nn])
@@ -1468,7 +1468,7 @@ updatecheck()
 {
 
   # Download the latest version file from the source repository
-  curl --silent --retry 3 --connect-timeout 3 --max-time 6 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/version.txt" -o "/jffs/addons/tailmon.d/version.txt"
+  curl --silent --retry 3 --connect-timeout 3 --max-time 6 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/version.txt" -o "/jffs/addons/tailmon-zero.d/version.txt"
 
   if [ -f "$dlverpath" ]
     then
@@ -1495,7 +1495,7 @@ betacheck()
 {
 
   # Download the latest version file from the source repository
-  curl --silent --retry 3 --connect-timeout 3 --max-time 6 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/develop/version.txt" -o "/jffs/addons/tailmon.d/beta.txt"
+  curl --silent --retry 3 --connect-timeout 3 --max-time 6 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/beta/version.txt" -o "/jffs/addons/tailmon-zero.d/beta.txt"
 
   if [ -f "$bverpath" ]
     then

@@ -11,7 +11,7 @@ expressinstallfail()
   echo ""
   read -rsp $'Press any key to return to setup...\n' -n1 key
 
-  exec sh /jffs/scripts/tailmon.sh -setup
+  exec sh /jffs/scripts/tailmon-zero.sh -setup
   exit 1
 }
 
@@ -205,7 +205,7 @@ expressinstall()
   echo ""
   read -rsp $'Press any key to continue...\n' -n1 key
 
-  exec sh /jffs/scripts/tailmon.sh -noswitch
+  exec sh /jffs/scripts/tailmon-zero.sh -noswitch
   echo -e "${CClear}"
   exit 0
 }

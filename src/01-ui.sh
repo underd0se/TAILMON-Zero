@@ -138,7 +138,7 @@ ScriptUpdateFromAMTM()
     # Force a TAILMON download and update
     echo ""
     echo -e "${InvGreen} ${CClear} Downloading latest ${CGreen}TAILMON${CClear}... Please stand by while we add even more Tailscale goodness..."
-    curl --silent --retry 3 "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh"
+    curl --silent --retry 3 "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh"
     DLsuccess=$?
     if [ "$DLsuccess" -eq 0 ]; then
       echo -e "${InvGreen} ${CClear} TAILMON Download/Update Success."
@@ -358,8 +358,33 @@ progressbarpause()
 # -------------------------------------------------------------------------------------------------------------------------
 # Initial setup menu
 
+legacy_cleanup() {
+    clear
+    echo -e "${CRed}WARNING: Legacy TAILMON Installation Detected!${CClear}"
+    echo -e "TAILMON Zero cannot run alongside the legacy version of TAILMON."
+    echo -e "Continuing will automatically remove legacy TAILMON files and configurations."
+    echo ""
+    if promptyn "Would you like to remove legacy TAILMON and continue setup? [y/n]: "; then
+        echo -e "\n${CGreen}Cleaning up legacy TAILMON...${CClear}"
+        rm -f /jffs/scripts/tailmon.sh.tmp 2>/dev/null
+        cru d tailmon >/dev/null 2>&1
+        rm -f -r /jffs/addons/tailmon.d >/dev/null 2>&1
+        rm -f /jffs/scripts/tailmon.sh >/dev/null 2>&1
+        sed -i -e '/tailmon\.sh/d' /jffs/scripts/post-mount >/dev/null 2>&1
+        sed -i -e '/tailmon\.sh/d' /jffs/configs/profile.add >/dev/null 2>&1
+        echo -e "${CGreen}Legacy TAILMON removed successfully.${CClear}"
+        sleep 2
+    else
+        echo -e "\nSetup aborted. Please manually uninstall legacy TAILMON first."
+        exit 1
+    fi
+}
+
 initialsetup()
 {
+    if [ -d "/jffs/addons/tailmon.d" ] || [ -f "/jffs/scripts/tailmon.sh" ]; then
+        legacy_cleanup
+    fi
     clear
     echo -e "${InvGreen} ${InvDkGray}${CWhite} TAILMON Initial Setup                                                                 ${CClear}"
     echo -e "${InvGreen} ${CClear}"
@@ -392,7 +417,7 @@ initialsetup()
         2)
           echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON Advanced Install initiated." >> "$logfile"
           saveconfig
-          exec sh /jffs/scripts/tailmon.sh -setup
+          exec sh /jffs/scripts/tailmon-zero.sh -setup
           ;;
 
         [Ee]) echo -e "${CClear}"; echo ""; exit 0;;

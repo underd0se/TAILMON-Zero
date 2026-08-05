@@ -24,12 +24,12 @@ export SCREENDIR="${HOME}/.screen"
 version="0.1.0"
 beta=0                                                               # Beta indicator on/off
 track=0                                                              # Stable (0) / Beta (1) Track subscription
-apppath="/jffs/scripts/tailmon.sh"                                   # Static path to the app
-config="/jffs/addons/tailmon.d/tailmon.cfg"                          # Static path to the config file
-dlverpath="/jffs/addons/tailmon.d/version.txt"                       # Static path to the version file
-bverpath="/jffs/addons/tailmon.d/beta.txt"                           # Static path to the beta version file
-logfile="/jffs/addons/tailmon.d/tailmon.log"                         # Static path to the log
-tmemails="/jffs/addons/tailmon.d/tmemails.txt"                       # Static path to email rate limit file
+apppath="/jffs/scripts/tailmon-zero.sh"                                   # Static path to the app
+config="/jffs/addons/tailmon-zero.d/tailmon-zero.cfg"                          # Static path to the config file
+dlverpath="/jffs/addons/tailmon-zero.d/version.txt"                       # Static path to the version file
+bverpath="/jffs/addons/tailmon-zero.d/beta.txt"                           # Static path to the beta version file
+logfile="/jffs/addons/tailmon-zero.d/tailmon-zero.log"                         # Static path to the log
+tmemails="/jffs/addons/tailmon-zero.d/tmemails.txt"                       # Static path to email rate limit file
 routerboot=0                                                         # Tracking router reboot notifications
 tsinstalled=0
 keepalive=0
@@ -95,7 +95,7 @@ doScriptUpdateFromAMTM=true
 cleanup() {
   local exit_code=$?
   rm -f /opt/tmp/tailscaled 2>/dev/null
-  rm -f /jffs/scripts/tailmon.sh.tmp 2>/dev/null
+  rm -f /jffs/scripts/tailmon-zero.sh.tmp 2>/dev/null
   # Exit cleanly with the original exit code
   exit "$exit_code"
 }

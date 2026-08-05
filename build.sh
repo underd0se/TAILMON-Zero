@@ -7,7 +7,7 @@ set -euo pipefail
 
 echo "Building TAILMON ZER0..."
 
-cat src/*.sh > tailmon.sh
-chmod +x tailmon.sh
+cat src/*.sh > tailmon-zero.sh
+chmod +x tailmon-zero.sh
 
-echo "Build complete! Output saved to tailmon.sh"
+echo "Build complete! Output saved to tailmon-zero.sh"

@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------------------------------------------------------
-# vuninstall is a function that uninstalls and removes all traces of tailmon/tailscale from your router...
+# vuninstall is a function that uninstalls and removes all traces of tailmon-zero/tailscale from your router...
 
 vuninstall()
 {
@@ -27,12 +27,12 @@ vuninstall()
           # Clean up any residual temporary download files
           rm -f /opt/tmp/tailscaled 2>/dev/null
           rm -f /opt/tmp/tailscale 2>/dev/null
-          rm -f /jffs/scripts/tailmon.sh.tmp 2>/dev/null
+          rm -f /jffs/scripts/tailmon-zero.sh.tmp 2>/dev/null
 
-          rm -f -r /jffs/addons/tailmon.d >/dev/null 2>&1
-          rm -f /jffs/scripts/tailmon.sh >/dev/null 2>&1
-          sed -i -e '/tailmon.sh/d' /jffs/scripts/post-mount >/dev/null 2>&1
-          sed -i -e '/tailmon.sh/d' /jffs/configs/profile.add >/dev/null 2>&1
+          rm -f -r /jffs/addons/tailmon-zero.d >/dev/null 2>&1
+          rm -f /jffs/scripts/tailmon-zero.sh >/dev/null 2>&1
+          sed -i -e '/tailmon-zero.sh/d' /jffs/scripts/post-mount >/dev/null 2>&1
+          sed -i -e '/tailmon-zero.sh/d' /jffs/configs/profile.add >/dev/null 2>&1
           echo ""
           echo -e "\n${CGreen}TAILMON has been uninstalled...${CClear}"
           echo ""
@@ -159,7 +159,7 @@ trimlogs()
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
-# saveconfig saves the tailmon.cfg file after every major change, and applies that to the script on the fly
+# saveconfig saves the tailmon-zero.cfg file after every major change, and applies that to the script on the fly
 
 saveconfig()
 {
@@ -201,7 +201,7 @@ saveconfig()
 # -------------------------------------------------------------------------------------------------------------------------
 
 # Remove Maintenance Mode file lock
-rm -f /jffs/addons/tailmon.d/updating.txt >/dev/null 2>&1
+rm -f /jffs/addons/tailmon-zero.d/updating.txt >/dev/null 2>&1
 
 # Check for updates
 updatecheck
@@ -218,7 +218,7 @@ fi
 if [ $# -eq 0 ]
   then
     clear
-    exec sh /jffs/scripts/tailmon.sh -noswitch
+    exec sh /jffs/scripts/tailmon-zero.sh -noswitch
     exit 0
 fi
 
@@ -233,7 +233,7 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ] || [ "$1" == "-setup" ] || [ "$1" == 
     echo "TAILMON v$version"
     echo ""
     echo "Exiting due to invalid commandline options!"
-    echo "(run 'tailmon.sh -h' for help)"
+    echo "(run 'tailmon-zero.sh -h' for help)"
     echo ""
     echo -e "${CClear}"
     exit 0
@@ -246,17 +246,17 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ]
   echo ""
   echo "TAILMON v$version Commandline Option Usage:"
   echo ""
-  echo "tailmon -h | -help"
-  echo "tailmon -setup"
-  echo "tailmon -bw"
-  echo "tailmon -screen"
-  echo "tailmon -screen -now"
+  echo "tailmon-zero -h | -help"
+  echo "tailmon-zero -setup"
+  echo "tailmon-zero -bw"
+  echo "tailmon-zero -screen"
+  echo "tailmon-zero -screen -now"
   echo ""
   echo " -h | -help (this output)"
   echo " -setup (displays the setup menu)"
-  echo " -bw (runs tailmon in monochrome mode)"
-  echo " -screen (runs tailmon in screen background)"
-  echo " -screen -now (runs tailmon in screen background immediately)"
+  echo " -bw (runs tailmon-zero in monochrome mode)"
+  echo " -screen (runs tailmon-zero in screen background)"
+  echo " -screen -now (runs tailmon-zero in screen background immediately)"
   echo ""
   echo -e "${CClear}"
   exit 0
@@ -299,9 +299,9 @@ fi
 # Check to see if the setup option is being called
 if [ "$1" == "-setup" ]
   then
-    # Create the necessary folder/file structure for tailmon under /jffs/addons
-    if [ ! -d "/jffs/addons/tailmon.d" ]; then
-      mkdir -p "/jffs/addons/tailmon.d"
+    # Create the necessary folder/file structure for tailmon-zero under /jffs/addons
+    if [ ! -d "/jffs/addons/tailmon-zero.d" ]; then
+      mkdir -p "/jffs/addons/tailmon-zero.d"
     fi
     logoNM
     vsetup
@@ -319,12 +319,12 @@ if [ "$1" == "-screen" ]
 
     /opt/sbin/screen -wipe >/dev/null 2>&1 # Kill any dead screen sessions
     sleep 1
-    ScreenSess=$(/opt/sbin/screen -ls | awk '/tailmon/ {split($1,a,"."); print a[1]}')
+    ScreenSess=$(/opt/sbin/screen -ls | awk '/tailmon-zero/ {split($1,a,"."); print a[1]}')
       if [ -z "$ScreenSess" ]; then
         if [ "$bypassscreentimer" == "1" ]; then
-          /opt/sbin/screen -dmS "tailmon" "$apppath" -noswitch
+          /opt/sbin/screen -dmS "tailmon-zero" "$apppath" -noswitch
           sleep 1
-          /opt/sbin/screen -r tailmon
+          /opt/sbin/screen -r tailmon-zero
         else
           clear
           echo -e "${CClear}Executing ${CGreen}TAILMON v$version${CClear} using the SCREEN utility..."
@@ -333,9 +333,9 @@ if [ "$1" == "-screen" ]
           echo -e "${CClear}In order to keep TAILMON running in the background,"
           echo -e "${CClear}properly exit the SCREEN session by using: ${CGreen}CTRL-A + D${CClear}"
           echo ""
-          /opt/sbin/screen -dmS "tailmon" "$apppath" -noswitch
+          /opt/sbin/screen -dmS "tailmon-zero" "$apppath" -noswitch
           sleep 5
-          /opt/sbin/screen -r tailmon
+          /opt/sbin/screen -r tailmon-zero
           exit 0
         fi
       else
@@ -366,7 +366,7 @@ if [ "$1" == "-noswitch" ]
     if ! tailscaleready; then
       monitoringblocked
       sleep 1
-      exec sh /jffs/scripts/tailmon.sh -setup
+      exec sh /jffs/scripts/tailmon-zero.sh -setup
       exit 1
     fi
 
@@ -398,7 +398,7 @@ if [ "$1" == "-bw" ] || [ "$1" == "-now" ]; then
     clear
     monitoringblocked
     sleep 1
-    exec sh /jffs/scripts/tailmon.sh -setup
+    exec sh /jffs/scripts/tailmon-zero.sh -setup
     exit 1
   fi
 fi
@@ -410,14 +410,14 @@ fi
 #DEBUG=; set -x # uncomment/comment to enable/disable debug mode
 #{              # uncomment/comment to enable/disable debug mode
 
-# Create the necessary folder/file structure for tailmon under /jffs/addons
-if [ ! -d "/jffs/addons/tailmon.d" ]; then
-  mkdir -p "/jffs/addons/tailmon.d"
+# Create the necessary folder/file structure for tailmon-zero under /jffs/addons
+if [ ! -d "/jffs/addons/tailmon-zero.d" ]; then
+  mkdir -p "/jffs/addons/tailmon-zero.d"
 fi
 
 # Check for and add an alias for TAILMON
-if ! grep -F "sh /jffs/scripts/tailmon.sh" /jffs/configs/profile.add >/dev/null 2>/dev/null; then
-  echo "alias tailmon=\"sh /jffs/scripts/tailmon.sh\" # added by tailmon" >> /jffs/configs/profile.add
+if ! grep -F "sh /jffs/scripts/tailmon-zero.sh" /jffs/configs/profile.add >/dev/null 2>/dev/null; then
+  echo "alias tailmon-zero=\"sh /jffs/scripts/tailmon-zero.sh\" # added by tailmon-zero" >> /jffs/configs/profile.add
 fi
 
 if [ ! -f "/opt/bin/timeout" ] || [ ! -f "/opt/sbin/screen" ]; then
@@ -446,7 +446,7 @@ while true; do
     initialsetup
   fi
 
-  while [ -f /jffs/addons/tailmon.d/updating.txt ]; do
+  while [ -f /jffs/addons/tailmon-zero.d/updating.txt ]; do
     clear
     echo -e "${CGreen}[TAILMON is in Maintenance Mode]${CClear}"
     echo ""
@@ -498,7 +498,7 @@ while true; do
     tsver=$(tailscale version | awk 'NR==1 {print $1}') >/dev/null 2>&1
     if [ -z "$tsver" ]; then tsver="0.00"; fi
 
-    #Display tailmon Update Notifications
+    #Display tailmon-zero Update Notifications
     if [ "$track" = "0" ]; then
       if [ "$UpdateNotify" != "0" ]
         then
@@ -513,7 +513,7 @@ while true; do
       fi
     fi
 
-    #Display tailmon client header
+    #Display tailmon-zero client header
     echo -en "${InvGreen} ${InvDkGray} TAILMON ZER0 - v"
     printf "%-8s" "$version"
     echo -e "                     ${CWhite}Operations Menu ${InvDkGray}           $tzspaces$(date +"%a %b %d, %Y %H:%M:%S %Z %z") ${CClear}"
@@ -574,18 +574,18 @@ while true; do
   else
     echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale binaries not found. Please investigate." >> "$logfile"
     tsinstalled=0
-    exec sh /jffs/scripts/tailmon.sh -setup
+    exec sh /jffs/scripts/tailmon-zero.sh -setup
   fi
 
   #Determine if a TAILMON autoupdate has happened and restart script
-  if [ -f /jffs/addons/tailmon.d/updated.txt ]
+  if [ -f /jffs/addons/tailmon-zero.d/updated.txt ]
     then
       printf "\33[2K\r"
       printf "${CGreen}\r[Replacing TAILMON with Latest Version]"
       echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Replacing TAILMON with latest version." >> "$logfile"
       sleep 1
-      rm -f /jffs/addons/tailmon.d/updated.txt >/dev/null 2>&1
-      exec sh /jffs/scripts/tailmon.sh
+      rm -f /jffs/addons/tailmon-zero.d/updated.txt >/dev/null 2>&1
+      exec sh /jffs/scripts/tailmon-zero.sh
       exit 0
   fi
 
