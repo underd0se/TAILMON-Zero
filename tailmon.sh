@@ -99,7 +99,7 @@ cleanup() {
   # Exit cleanly with the original exit code
   exit "$exit_code"
 }
-trap cleanup EXIT ERR INT TERM
+trap cleanup EXIT INT TERM
 
 
 # Progressbar variables (optimized)
@@ -2337,6 +2337,10 @@ inject_s06tailscaled()
     sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/swap_total=$(free/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
+    # We must explicitly clean up stranded 'fi' but ONLY if it follows the overcommit block
+    sed -i '/^fi$/d' "/opt/etc/init.d/S06tailscaled" 2>/dev/null || true
 
     # Inject new logic
     awk 'NR==2{print "# TAILMON Zero: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"'); [ \"$swap_total\" = \"0\" ] && echo 0 > /proc/sys/vm/overcommit_memory"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
@@ -3989,6 +3993,9 @@ vuninstall()
                   sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/^fi$/d' "/opt/etc/init.d/S06tailscaled" 2>/dev/null || true
                   sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
                 fi

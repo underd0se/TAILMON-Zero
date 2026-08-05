@@ -105,6 +105,9 @@ vuninstall()
                   sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/^fi$/d' "/opt/etc/init.d/S06tailscaled" 2>/dev/null || true
+                  sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
                 fi
               fi
               echo ""

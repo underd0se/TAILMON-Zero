@@ -99,7 +99,7 @@ cleanup() {
   # Exit cleanly with the original exit code
   exit "$exit_code"
 }
-trap cleanup EXIT ERR INT TERM
+trap cleanup EXIT INT TERM
 
 
 # Progressbar variables (optimized)
