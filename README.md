@@ -21,4 +21,9 @@ To install TAILMON ZER0 via SSH on your Asuswrt-Merlin router, simply run:
 curl --silent --retry 3 "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh" && sh /jffs/scripts/tailmon-zero.sh
 ```
 
+> **Note on Migration:** TAILMON and TAILMON ZER0 cannot run alongside each other. If you already have the original TAILMON installed, the setup process will automatically detect it and prompt you to cleanly remove it before proceeding. All necessary memory management adaptations will then be applied for you.
+
+### Uninstallation
+If you ever choose to completely uninstall TAILMON ZER0, all modified router memory management settings (such as overcommit bypass rules) will be cleanly reverted back to their original system defaults.
+
 *(For support and discussion regarding the original upstream project, visit the [SNBForums Thread](https://www.snbforums.com/threads/tailmon-v1-3-4-2026-jul-12-wireguard-based-tailscale-installer-configurator-and-monitor-available-in-amtm.97556/)).*
