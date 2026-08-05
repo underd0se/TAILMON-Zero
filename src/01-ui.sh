@@ -378,11 +378,11 @@ initialsetup()
     read -p "Please select? (1=Express Install, 2=Advanced Install, e=Exit): " SelectSetup
       case $SelectSetup in
         1)
-        echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON Express Install initiated." >> "$logfile"
+        echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON Express Install initiated." >> "$logfile"
         expressinstall;;
 
         2)
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON Advanced Install initiated." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON Advanced Install initiated." >> "$logfile"
           saveconfig
           exec sh /jffs/scripts/tailmon.sh -setup
           ;;

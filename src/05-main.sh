@@ -186,7 +186,7 @@ saveconfig()
      echo 'customcmdline="'"$customcmdline"'"'
      echo 'old_overcommit="'"$old_overcommit"'"'
    } > "$config"
-   echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON config has been updated." >> "$logfile"
+   echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON config has been updated." >> "$logfile"
 
    if [ -f "$config" ]; then
      source "$config"
@@ -377,14 +377,14 @@ if [ "$1" == "-noswitch" ]
     if [ "$track" = "0" ]; then
       if [ "$UpdateNotify" != "0" ]
         then
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON STABLE TRACK v$DLversion available for download/install." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON STABLE TRACK v$DLversion available for download/install." >> "$logfile"
       fi
     fi
 
     if [ "$track" = "1" ]; then
       if [ "$BUpdateNotify" != "0" ]
         then
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON BETA TRACK v$Bversion available for download/install." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON BETA TRACK v$Bversion available for download/install." >> "$logfile"
       fi
     fi
 fi
@@ -569,7 +569,7 @@ while true; do
     #read -rsp $'Press any key to continue...\n' -n1 key
 
   else
-    echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd"$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale binaries not found. Please investigate." >> "$logfile"
+    echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale binaries not found. Please investigate." >> "$logfile"
     tsinstalled=0
     exec sh /jffs/scripts/tailmon.sh -setup
   fi
@@ -579,7 +579,7 @@ while true; do
     then
       printf "\33[2K\r"
       printf "${CGreen}\r[Replacing TAILMON with Latest Version]"
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd"$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Replacing TAILMON with latest version." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Replacing TAILMON with latest version." >> "$logfile"
       sleep 1
       rm -f /jffs/addons/tailmon.d/updated.txt >/dev/null 2>&1
       exec sh /jffs/scripts/tailmon.sh
@@ -595,7 +595,7 @@ while true; do
     if [ "$s06args" != "$tailmonargs" ]; then
       printf "\33[2K\r"
       printf "${CGreen}\r[Tailscale Service settings out-of-sync]"
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd"$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale Service settings are out-of-sync." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale Service settings are out-of-sync." >> "$logfile"
       sleep 1
 
       tsdown
@@ -614,7 +614,7 @@ while true; do
 
       printf "\33[2K\r"
       printf "${CGreen}\r[Tailscale Service settings synced]"
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd"$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale Service settings synced." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale Service settings synced." >> "$logfile"
       sleep 1
 
       startts
@@ -634,7 +634,7 @@ while true; do
 
     printf "\33[2K\r"
     printf "${CGreen}\r[Tailscale Status producing errors...Restarting services]"
-    echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd"$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale Status producing errors. Restarting services." >> "$logfile"
+    echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale Status producing errors. Restarting services." >> "$logfile"
 
     sleep 1
     tsdown
@@ -655,7 +655,7 @@ while true; do
     # Router must have rebooted and send a notification
     printf "\33[2K\r"
     printf "${CGreen}\r[Router appears to have been restarted]"
-    echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd"$timeoutsec nvram get lan_hostname) TAILMON[$$] - WARNING: Router appears to have been unexpectedly restarted." >> "$logfile"
+    echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - WARNING: Router appears to have been unexpectedly restarted." >> "$logfile"
     sleep 1
     echo ""
     sendmessage 1 "Router has been restarted"

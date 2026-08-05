@@ -7,7 +7,7 @@ expressinstallfail()
 
   echo ""
   echo -e "${CRed}ERROR: $express_error${CClear}"
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Express Install failed: $express_error" >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Express Install failed: $express_error" >> "$logfile"
   echo ""
   read -rsp $'Press any key to return to setup...\n' -n1 key
 
@@ -25,7 +25,7 @@ expressinstall()
       clear
       echo -e "${CRed}ERROR: Entware was not found on this router...${CClear}"
       echo -e "Please install Entware using the AMTM utility before proceeding..."
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Entware was not found installed on router. Please investigate." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Entware was not found installed on router. Please investigate." >> "$logfile"
       echo ""
       read -rsp $'Press any key to continue...\n' -n1 key
       exit 1
@@ -78,7 +78,7 @@ expressinstall()
   fi
 
   echo ""
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Entware package installed." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Entware package installed." >> "$logfile"
 
   echo -e "${CGreen}Updating Tailscale Binary to latest version..."
   echo ""
@@ -112,7 +112,7 @@ expressinstall()
   fi
 
   echo ""
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary verified at version $tsversion_after." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary verified at version $tsversion_after." >> "$logfile"
 
   echo -e "${CGreen}Applying settings for Userspace mode of operation...${CClear}"
 
@@ -139,7 +139,7 @@ expressinstall()
 
   inject_s06tailscaled
 
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Userspace Mode settings have been applied." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Userspace Mode settings have been applied." >> "$logfile"
 
   # Remove the legacy firewall-start entry if found.
   if [ -f "/jffs/scripts/firewall-start" ] &&
@@ -170,7 +170,7 @@ expressinstall()
     expressinstallfail "tailscaled did not remain running after startup."
   fi
 
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service started and verified." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service started and verified." >> "$logfile"
 
   echo ""
   echo ""
@@ -197,7 +197,7 @@ expressinstall()
     expressinstallfail "The Tailscale connection could not be verified after authentication."
   fi
 
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection started and verified." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection started and verified." >> "$logfile"
 
   echo ""
   echo ""
@@ -241,7 +241,7 @@ installts()
         else
           opkg install tailscale_nohf #install special tailscale package for arm7 kernel 2.6
         fi
-        echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Entware package installed." >> "$logfile"
+        echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Entware package installed." >> "$logfile"
 
         # The Entware package creates a fresh S06tailscaled service script. Apply the
         # operating mode already selected in TAILMON so package defaults cannot leave
@@ -249,7 +249,7 @@ installts()
         if [ ! -f "/opt/etc/init.d/S06tailscaled" ]; then
           echo ""
           echo -e "${CRed}ERROR: Tailscale service script was not found after installation.${CClear}"
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: S06tailscaled was not found after package installation." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: S06tailscaled was not found after package installation." >> "$logfile"
           echo ""
           read -rsp $'Press any key to continue...\n' -n1 key
           return 1
@@ -269,7 +269,7 @@ installts()
             ;;
           *)
             echo -e "${CRed}ERROR: Unknown operating mode: $tsoperatingmode${CClear}"
-            echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Unknown operating mode '$tsoperatingmode' after package installation." >> "$logfile"
+            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unknown operating mode '$tsoperatingmode' after package installation." >> "$logfile"
             echo ""
             read -rsp $'Press any key to continue...\n' -n1 key
             return 1
@@ -282,7 +282,7 @@ installts()
         clear
         echo -e "${CRed}ERROR: Entware was not found on this router...${CClear}"
         echo -e "Please install Entware using the AMTM utility before proceeding..."
-        echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Entware was not found on router. Please investigate." >> "$logfile"
+        echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Entware was not found on router. Please investigate." >> "$logfile"
         echo ""
         read -rsp $'Press any key to continue...\n' -n1 key
         exit 1
@@ -308,7 +308,7 @@ installts()
       TMPDIR="/opt/tmp" tailscale update
       echo -e "${CClear}"
       echo ""
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary updated to latest available version." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary updated to latest available version." >> "$logfile"
       echo ""
       read -rsp $'Press any key to continue...\n' -n1 key
   fi
@@ -337,11 +337,11 @@ uninstallts()
           tailscale logout
           tailscale down
 
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection shut down and logged out." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection shut down and logged out." >> "$logfile"
 
           /opt/etc/init.d/S06tailscaled stop
 
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service shut down." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service shut down." >> "$logfile"
           echo ""
           echo -e "\n${CGreen}Removing firewall-start entries...${CClear}"
 
@@ -349,7 +349,7 @@ uninstallts()
           if [ -f /jffs/scripts/firewall-start ]; then
             if grep -q -F "if [ -x /opt/bin/tailscale ]; then tailscale down; tailscale up; fi" /jffs/scripts/firewall-start; then
               sed -i -e '/tailscale down/d' /jffs/scripts/firewall-start
-              echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: firewall-start entries removed." >> "$logfile"
+              echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: firewall-start entries removed." >> "$logfile"
             fi
           fi
 
@@ -370,7 +370,7 @@ uninstallts()
             opkg remove tailscale_nohf #remove special tailscale package for arm7 kernel 2.6
           fi
 
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Entware package removed." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Entware package removed." >> "$logfile"
 
           # Removed the various folders tailscale could hide
           rm -f /opt/var/tailscaled.state >/dev/null 2>&1
@@ -379,14 +379,14 @@ uninstallts()
           rm -r /var/run/tailscale >/dev/null 2>&1
           rm -r /var/lib/tailscale >/dev/null 2>&1
 
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale files and folders removed." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale files and folders removed." >> "$logfile"
           echo ""
           read -rsp $'Press any key to continue...\n' -n1 key
         else
           clear
           echo -e "${CRed}ERROR: Entware was not found on this router...${CClear}"
           echo -e "Please install Entware using the AMTM utility before proceeding..."
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Entware not found on router. Please investigate." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Entware not found on router. Please investigate." >> "$logfile"
           echo ""
           read -rsp $'Press any key to continue...\n' -n1 key
           exit 1
@@ -429,7 +429,7 @@ startts()
           printf "\33[2K\r"
       fi
 
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service started." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service started." >> "$logfile"
       echo ""
       resettimer=1
 }
@@ -446,7 +446,7 @@ stopts()
       echo -e "${CGreen}Messages:"
       echo ""
       /opt/etc/init.d/S06tailscaled stop
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service stopped." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Service stopped." >> "$logfile"
       echo ""
       resettimer=1
 }
@@ -518,7 +518,7 @@ tsreset()
           echo "Executing: tailscale up --reset"
           echo ""
           tailscale up --reset
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection Reset using --reset switch." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection Reset using --reset switch." >> "$logfile"
 
           echo ""
           tsdown
@@ -546,7 +546,7 @@ tsresetc()
       echo "Executing: tailscale up --reset"
       echo ""
       tailscale up --reset
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection Reset using --reset switch." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection Reset using --reset switch." >> "$logfile"
       resettimer=1
       echo -e "\n"
       read -rsp $'Press any key to continue...\n' -n1 key
@@ -612,7 +612,7 @@ tsup()
       # Drain that pending terminal input before returning to the setup menu.
       drainpendingttyinput
 
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection started." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection started." >> "$logfile"
       resettimer=1
 }
 
@@ -630,7 +630,7 @@ tsdown()
       echo "Executing: tailscale down"
       echo ""
       tailscale down
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection stopped." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Connection stopped." >> "$logfile"
       resettimer=1
 }
 
@@ -660,7 +660,7 @@ tsupdate()
         restarttsc
       fi
 
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary updated to latest available version." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary updated to latest available version." >> "$logfile"
       resettimer=1
 }
 
@@ -690,7 +690,7 @@ tsbeta()
     restarttsc
   fi
 
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary updated to latest BETA version." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binary updated to latest BETA version." >> "$logfile"
   resettimer=1
 }
 
@@ -715,7 +715,7 @@ setipforwarding()
   if ! grep -q -F "echo 1 > /proc/sys/net/ipv6/conf/all/forwarding" /jffs/scripts/init-start; then
     echo "echo 1 > /proc/sys/net/ipv6/conf/all/forwarding" >> /jffs/scripts/init-start
   fi
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: IP Forwarding enabled." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: IP Forwarding enabled." >> "$logfile"
 }
 
 # -------------------------------------------------------------------------------------------------------------------------

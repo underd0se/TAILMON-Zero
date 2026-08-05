@@ -42,7 +42,7 @@ autoupdate()
         then
         printf "\33[2K\r"
         printf "${CGreen}\r[Unable to Determine TAILMON Version...Exiting]\n"
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine TAILMON version -- please check your internet connection. Autoupdate exiting." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine TAILMON version -- please check your internet connection. Autoupdate exiting." >> "$logfile"
         echo -e "${CClear}"
         sendmessage 1 "Unable to reach TAILMON repository"
         sleep 1
@@ -83,7 +83,7 @@ autoupdate()
             then
               printf "\33[2K\r"
               printf "${CGreen}\r[Unable to Download TAILMON...Exiting]\n"
-            echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to download TAILMON -- please check your internet connection. Autoupdate exiting." >> "$logfile"
+            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to download TAILMON -- please check your internet connection. Autoupdate exiting." >> "$logfile"
               echo -e "${CClear}"
               sendmessage 1 "Unable to reach TAILMON repository"
               sleep 1
@@ -93,9 +93,9 @@ autoupdate()
           verdirection=$(vercompare "$serverver" "$localver")
           if [ "$verdirection" = "lt" ]; then
             if [ "$track" = "1" ]; then tracklabel="Beta"; else tracklabel="Stable"; fi
-            echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Installed TAILMON v$localver did not match the configured $tracklabel track -- corrected to v$serverver" >> "$logfile"
+            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Installed TAILMON v$localver did not match the configured $tracklabel track -- corrected to v$serverver" >> "$logfile"
           else
-            echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Successfully autoupdated TAILMON from v$localver to v$serverver" >> "$logfile"
+            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Successfully autoupdated TAILMON from v$localver to v$serverver" >> "$logfile"
           fi
           sendmessage 0 "TAILMON Script Successfully Updated" "$localver" "$serverver" "$verdirection"
           echo > /jffs/addons/tailmon.d/updated.txt
@@ -121,7 +121,7 @@ autoupdate()
         then
           printf "\33[2K\r"
           printf "${CGreen}\r[Unable to Determine Local Tailscale Version...Exiting]\n"
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine local Tailscale version -- please check your installation. Autoupdate exiting." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine local Tailscale version -- please check your installation. Autoupdate exiting." >> "$logfile"
           echo -e "${CClear}"
           sleep 2
           rm -f /jffs/addons/tailmon.d/updating.txt >/dev/null 2>&1
@@ -140,7 +140,7 @@ autoupdate()
         then
           printf "\33[2K\r"
           printf "${CGreen}\r[Unable to Determine Official Tailscale Version...Exiting]\n"
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine Official Tailscale version -- please check your installation/internet connection. Autoupdate exiting." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine Official Tailscale version -- please check your installation/internet connection. Autoupdate exiting." >> "$logfile"
           echo -e "${CClear}"
           sendmessage 1 "Unable to reach Tailscale repository"
           sleep 1
@@ -169,7 +169,7 @@ autoupdate()
             then
               printf "\33[2K\r"
               printf "${CGreen}\r[Unable to Download Tailscale Binary...Exiting]\n"
-              echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to download Tailscale Binary - please check your installation/internet connection." >> "$logfile"
+              echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to download Tailscale Binary - please check your installation/internet connection." >> "$logfile"
               echo -e "${CClear}"
               sendmessage 1 "Unable to reach Tailscale repository"
               sleep 1
@@ -177,7 +177,7 @@ autoupdate()
               exit 1
           fi
           echo ""
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Successfully autoupdated Tailscale Binary from v$localtsver to v$servertsver" >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Successfully autoupdated Tailscale Binary from v$localtsver to v$servertsver" >> "$logfile"
           sendmessage 0 "Tailscale Successfully Updated" "$localtsver" "$servertsver"
 
           # Upon a successful update, restart Tailscale services
@@ -212,7 +212,7 @@ autoupdate()
           printf "\33[2K\r"
           printf "${CGreen}\r[Autoupdate Completed Successfully]\n"
           echo -e "${CClear}"
-          echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Autoupdate completed successfully." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Autoupdate completed successfully." >> "$logfile"
           sleep 1
           rm -f /jffs/addons/tailmon.d/updating.txt >/dev/null 2>&1
           exit 0
@@ -229,7 +229,7 @@ autoupdate()
   printf "\33[2K\r"
   printf "${CGreen}\r[Autoupdate Completed Successfully]\n"
   echo -e "${CClear}"
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Autoupdate completed successfully." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Autoupdate completed successfully." >> "$logfile"
   sleep 1
   rm -f /jffs/addons/tailmon.d/updating.txt >/dev/null 2>&1
   exit 0
@@ -430,7 +430,7 @@ tsdowngrade()
     restarttsc
   fi
 
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binaries successfully updated to $TS_VERSION" >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale binaries successfully updated to $TS_VERSION" >> "$logfile"
   resettimer=1
 }
 
@@ -628,7 +628,7 @@ _ValidateCronJobMinute_()
 _SetLAN_HostName_()
 {
    [ -z "${LAN_HostName:+xSETx}" ] && \
-   LAN_HostName="$("$timeoutcmd""$timeoutsec" nvram get lan_hostname)"
+   LAN_HostName="$($timeoutcmd$timeoutsec nvram get lan_hostname)"
 }
 
 _GetLAN_HostName_()
@@ -666,7 +666,7 @@ while true; do
       autostart=0
       echo ""
       echo -e "${CGreen}[Modifying POST-MOUNT file]..."
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Reboot Protection Disabled" >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Reboot Protection Disabled" >> "$logfile"
       saveconfig
       sleep 1
       timer=$timerloop
@@ -682,7 +682,7 @@ while true; do
         autostart=1
         echo ""
         echo -e "${CGreen}[Modifying POST-MOUNT file]..."
-        echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Reboot Protection Enabled" >> "$logfile"
+        echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Reboot Protection Enabled" >> "$logfile"
         saveconfig
         sleep 1
         timer=$timerloop
@@ -701,7 +701,7 @@ while true; do
       autostart=1
       echo ""
       echo -e "${CGreen}[Modifying POST-MOUNT file]..."
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Reboot Protection Enabled" >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Reboot Protection Enabled" >> "$logfile"
       saveconfig
       sleep 1
       timer=$timerloop
@@ -1085,12 +1085,10 @@ inject_s06tailscaled()
     sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/swap_total=$(free/d' "/opt/etc/init.d/S06tailscaled"
-    sed -i '/if \[ "$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
-    sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
-    # Removed generic /fi/d to prevent breaking S06tailscaled
+    sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
 
     # Inject new logic
-    awk 'NR==2{print "# TAILMON Zero: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"')"; print "if [ \"$swap_total\" = \"0\" ]; then"; print "    echo 0 > /proc/sys/vm/overcommit_memory"; print "fi"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
+    awk 'NR==2{print "# TAILMON Zero: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"'); [ \"$swap_total\" = \"0\" ] && echo 0 > /proc/sys/vm/overcommit_memory"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
   fi
 }
 
@@ -1108,12 +1106,12 @@ applyuserspacemode()
 
     if grep -q -F "if [ -x /opt/bin/tailscale ]; then tailscale down; tailscale up; fi" /jffs/scripts/firewall-start; then
       sed -i -e '/tailscale down/d' /jffs/scripts/firewall-start
-      echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: firewall-start entries removed." >> "$logfile"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: firewall-start entries removed." >> "$logfile"
     fi
 
   fi
   inject_s06tailscaled
-  echo -e "$(date +'%b %d %Y %X') $("$timeoutcmd""$timeoutsec" nvram get lan_hostname) TAILMON[$$] - INFO: Userspace Mode settings have been applied." >> "$logfile"
+  echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Userspace Mode settings have been applied." >> "$logfile"
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
