@@ -4,11 +4,12 @@
 logoNM ()
 {
   clear
+  printf "%b" "${CDkGray}"
   cat <<EOF
 
 
 
-${CDkGray}                      _________    ______    __  _______  _   __
+                      _________    ______    __  _______  _   __
                      /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
                       / / / /| |  / // /   / /|_/ / / / /  |/ /
                      / / / ___ |_/ // /___/ /  / / /_/ / /|  /
@@ -17,14 +18,16 @@ ${CDkGray}                      _________    ______    __  _______  _   __
 
 
 EOF
-  printf "%s" "\r                            ${CGreen}    [ INITIALIZING ]     ${CClear}"
+  printf "%b" "${CClear}"
+  printf "%b" "\r                            ${CGreen}    [ INITIALIZING ]     ${CClear}"
   sleep 1
   clear
+  printf "%b" "${CYellow}"
   cat <<EOF
 
 
 
-${CYellow}                      _________    ______    __  _______  _   __
+                      _________    ______    __  _______  _   __
                      /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
                       / / / /| |  / // /   / /|_/ / / / /  |/ /
                      / / / ___ |_/ // /___/ /  / / /_/ / /|  /
@@ -33,20 +36,22 @@ ${CYellow}                      _________    ______    __  _______  _   __
 
 
 EOF
-  printf "%s" "\r                            ${CGreen}[ INITIALIZING ... DONE ]${CClear}"
+  printf "%b" "${CClear}"
+  printf "%b" "\r                            ${CGreen}[ INITIALIZING ... DONE ]${CClear}"
   sleep 1
-  printf "%s" "\r                            ${CGreen}      [ LOADING... ]     ${CClear}"
+  printf "%b" "\r                            ${CGreen}      [ LOADING... ]     ${CClear}"
   sleep 1
 }
 
 logoNMexit ()
 {
   clear
+  printf "%b" "${CYellow}"
   cat <<EOF
 
 
 
-${CYellow}                      _________    ______    __  _______  _   __
+                      _________    ______    __  _______  _   __
                      /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
                       / / / /| |  / // /   / /|_/ / / / /  |/ /
                      / / / ___ |_/ // /___/ /  / / /_/ / /|  /
@@ -55,14 +60,16 @@ ${CYellow}                      _________    ______    __  _______  _   __
 
 
 EOF
-  printf "%s" "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
+  printf "%b" "${CClear}"
+  printf "%b" "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
   sleep 1
   clear
+  printf "%b" "${CDkGray}"
   cat <<EOF
 
 
 
-${CDkGray}                      _________    ______    __  _______  _   __
+                      _________    ______    __  _______  _   __
                      /_  __/   |  /  _/ /   /  |/  / __ \/ | / /
                       / / / /| |  / // /   / /|_/ / / / /  |/ /
                      / / / ___ |_/ // /___/ /  / / /_/ / /|  /
@@ -71,9 +78,10 @@ ${CDkGray}                      _________    ______    __  _______  _   __
 
 
 EOF
-  printf "%s" "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
+  printf "%b" "${CClear}"
+  printf "%b" "\r                            ${CGreen}    [ SHUTTING DOWN ]     ${CClear}"
   sleep 1
-  printf "%s" "\r                            ${CDkGray}      [ GOODBYE... ]     ${CClear}\n\n"
+  printf "%b" "\r                            ${CDkGray}      [ GOODBYE... ]     ${CClear}\n\n"
   sleep 1
 }
 
@@ -103,7 +111,7 @@ spinner()
   totalspins=$((spins / 4))
   while [ $spin -le $totalspins ]; do
     for spinchar in / - \\ \|; do
-      printf \"%s\" "\r$spinchar"
+      printf "%b" "\r$spinchar"
       sleep 1
     done
     spin=$((spin+1))
@@ -254,7 +262,7 @@ progressbaroverride()
   [ "$1" -eq 1 ] && progresspromptactive=0
 
   if [ "$1" -eq -1 ]; then
-    printf \"%s\" "\r  $barspaces\r"
+    printf "%b" "\r  $barspaces\r"
   else
     if [ ! -z "$7" ] && [ "$1" -ge "$7" ]; then
       local barch=$(($7*barlen/$2))
@@ -312,7 +320,7 @@ progressbarpause()
 
   if [ "$1" -eq -1 ]
   then
-     printf \"%s\" "\r  $barspaces\r"
+     printf "%b" "\r  $barspaces\r"
   else
     if [ $# -gt 6 ] && [ -n "$7" ] && [ "$1" -ge "$7" ]
     then
