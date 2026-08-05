@@ -12,14 +12,13 @@ TAILMON ZER0 was created to explicitly support Asuswrt-Merlin routers running **
 - **Dynamic Swapless Overcommit Bypass:** Safely tracks and conditionally injects `vm.overcommit_memory=0` during boot for swapless routers, natively integrated into Tailmon's `saveconfig()` to guarantee restoration upon uninstall.
 - **Zero NVRAM Footprint:** Complete removal of deprecated/messy NVRAM variable storage for memory management tracking.
 - **Aggressive Memory Tuning:** Hardcoded `GOMEMLIMIT=20MiB`, `GOGC=20`, and `GOMAXPROCS=1` via explicit native `export` declarations inside the `S06tailscaled` init script.
-- **Independent Autoupdates:** Fully severed from the upstream TAILMON repo, pointing all internal installation and autoupdate `curl` endpoints directly to this `underd0se/TAILMON-Zero` repository.
 
 ---
 
 ### Installation
 To install TAILMON ZER0 via SSH on your Asuswrt-Merlin router, simply run:
 ```sh
-curl --silent --retry 3 "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon.sh" -o "/jffs/scripts/tailmon.sh" && chmod 755 "/jffs/scripts/tailmon.sh" && sh /jffs/scripts/tailmon.sh
+curl --silent --retry 3 "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh" && sh /jffs/scripts/tailmon-zero.sh
 ```
 
 *(For support and discussion regarding the original upstream project, visit the [SNBForums Thread](https://www.snbforums.com/threads/tailmon-v1-3-4-2026-jul-12-wireguard-based-tailscale-installer-configurator-and-monitor-available-in-amtm.97556/)).*
