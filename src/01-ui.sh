@@ -382,6 +382,10 @@ legacy_cleanup() {
 
 initialsetup()
 {
+    if [ ! -d "/jffs/addons/tailmon-zero.d" ]; then
+        mkdir -p "/jffs/addons/tailmon-zero.d"
+    fi
+
     if [ -d "/jffs/addons/tailmon.d" ] || [ -f "/jffs/scripts/tailmon.sh" ]; then
         legacy_cleanup
     fi
