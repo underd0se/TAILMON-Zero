@@ -7,7 +7,7 @@ vuninstall()
     clear
     echo -e "${InvGreen} ${InvDkGray}${CWhite} Uninstall Utility                                                                     ${CClear}"
     echo -e "${InvGreen} ${CClear}"
-    echo -e "${InvGreen} ${CClear} You are about to uninstall TAILMON and optionally, Tailscale from your router! This"
+    echo -e "${InvGreen} ${CClear} You are about to uninstall TAILMON ZER0 and optionally, Tailscale from your router! This"
     echo -e "${InvGreen} ${CClear} action is irreversible."
     echo -e "${InvGreen} ${CClear}${CDkGray}---------------------------------------------------------------------------------------${CClear}"
     echo ""
@@ -34,7 +34,7 @@ vuninstall()
           sed -i -e '/tailmon-zero.sh/d' /jffs/scripts/post-mount >/dev/null 2>&1
           sed -i -e '/tailmon-zero.sh/d' /jffs/configs/profile.add >/dev/null 2>&1
           echo ""
-          echo -e "\n${CGreen}TAILMON has been uninstalled...${CClear}"
+          echo -e "\n${CGreen}TAILMON ZER0 has been uninstalled...${CClear}"
           echo ""
           if [ -f "/opt/bin/tailscale" ]; then
             echo -e "Would you also like to uninstall Tailscale from your router?"
@@ -90,7 +90,7 @@ vuninstall()
               exit 0
             else
               echo ""
-              echo -e "\nWould you like to RETAIN the TAILMON Zero memory optimizations for Tailscale?"
+              echo -e "\nWould you like to RETAIN the TAILMON ZER0 memory optimizations for Tailscale?"
               echo -e "This is highly recommended to prevent your router from crashing."
               if promptyn "[y/n]: "; then
                 echo ""
@@ -98,7 +98,7 @@ vuninstall()
               else
                 echo -e "\nStripping memory optimizations..."
                 if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
-                  sed -i '/# TAILMON Zero: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/# TAILMON ZER0: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
@@ -130,7 +130,7 @@ vuninstall()
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
-# vlogs is a function that calls the nano text editor to view the TAILMON log file
+# vlogs is a function that calls the nano text editor to view the TAILMON ZER0 log file
 
 vlogs()
 {
@@ -189,7 +189,7 @@ saveconfig()
      echo 'customcmdline="'"$customcmdline"'"'
      echo 'old_overcommit="'"$old_overcommit"'"'
    } > "$config"
-   echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON config has been updated." >> "$logfile"
+   echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON ZER0 config has been updated." >> "$logfile"
 
    if [ -f "$config" ]; then
      source "$config"
@@ -230,7 +230,7 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ] || [ "$1" == "-setup" ] || [ "$1" == 
   else
     clear
     echo ""
-    echo "TAILMON v$version"
+    echo "TAILMON ZER0 v$version"
     echo ""
     echo "Exiting due to invalid commandline options!"
     echo "(run 'tailmon-zero.sh -h' for help)"
@@ -244,7 +244,7 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ]
   then
   clear
   echo ""
-  echo "TAILMON v$version Commandline Option Usage:"
+  echo "TAILMON ZER0 v$version Commandline Option Usage:"
   echo ""
   echo "tailmon-zero -h | -help"
   echo "tailmon-zero -setup"
@@ -273,7 +273,7 @@ fi
 # Check to see if autoupdate is being called
 if [ "$1" == "-autoupdate" ]
   then
-    # Grab the TAILMON config file and read it in
+    # Grab the TAILMON ZER0 config file and read it in
     if [ -f "$config" ]; then
       source "$config"
     else
@@ -327,10 +327,10 @@ if [ "$1" == "-screen" ]
           /opt/sbin/screen -r tailmon-zero
         else
           clear
-          echo -e "${CClear}Executing ${CGreen}TAILMON v$version${CClear} using the SCREEN utility..."
+          echo -e "${CClear}Executing ${CGreen}TAILMON ZER0 v$version${CClear} using the SCREEN utility..."
           echo ""
           echo -e "${CClear}IMPORTANT:"
-          echo -e "${CClear}In order to keep TAILMON running in the background,"
+          echo -e "${CClear}In order to keep TAILMON ZER0 running in the background,"
           echo -e "${CClear}properly exit the SCREEN session by using: ${CGreen}CTRL-A + D${CClear}"
           echo ""
           /opt/sbin/screen -dmS "tailmon-zero" "$apppath" -noswitch
@@ -343,10 +343,10 @@ if [ "$1" == "-screen" ]
           sleep 1
         else
           clear
-          echo -e "${CClear}Connecting to existing ${CGreen}TAILMON v$version${CClear} SCREEN session...${CClear}"
+          echo -e "${CClear}Connecting to existing ${CGreen}TAILMON ZER0 v$version${CClear} SCREEN session...${CClear}"
           echo ""
           echo -e "${CClear}IMPORTANT:${CClear}"
-          echo -e "${CClear}In order to keep TAILMON running in the background,${CClear}"
+          echo -e "${CClear}In order to keep TAILMON ZER0 running in the background,${CClear}"
           echo -e "${CClear}properly exit the SCREEN session by using: ${CGreen}CTRL-A + D${CClear}"
           echo ""
           echo -e "${CClear}Switching to the SCREEN session in T-5 sec...${CClear}"
@@ -376,18 +376,18 @@ if [ "$1" == "-noswitch" ]
       source "$config"
     fi
 
-    #Display TAILMON Update Log Notifications
+    #Display TAILMON ZER0 Update Log Notifications
     if [ "$track" = "0" ]; then
       if [ "$UpdateNotify" != "0" ]
         then
-          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON STABLE TRACK v$DLversion available for download/install." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON ZER0 STABLE TRACK v$DLversion available for download/install." >> "$logfile"
       fi
     fi
 
     if [ "$track" = "1" ]; then
       if [ "$BUpdateNotify" != "0" ]
         then
-          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON BETA TRACK v$Bversion available for download/install." >> "$logfile"
+          echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: New TAILMON ZER0 BETA TRACK v$Bversion available for download/install." >> "$logfile"
       fi
     fi
 fi
@@ -404,7 +404,7 @@ if [ "$1" == "-bw" ] || [ "$1" == "-now" ]; then
 fi
 
 # -------------------------------------------------------------------------------------------------------------------------
-# Begin TAILMON Main Loop
+# Begin TAILMON ZER0 Main Loop
 # -------------------------------------------------------------------------------------------------------------------------
 
 #DEBUG=; set -x # uncomment/comment to enable/disable debug mode
@@ -415,7 +415,7 @@ if [ ! -d "/jffs/addons/tailmon-zero.d" ]; then
   mkdir -p "/jffs/addons/tailmon-zero.d"
 fi
 
-# Check for and add an alias for TAILMON
+# Check for and add an alias for TAILMON ZER0
 if ! grep -F "sh /jffs/scripts/tailmon-zero.sh" /jffs/configs/profile.add >/dev/null 2>/dev/null; then
   echo "alias tailmon-zero=\"sh /jffs/scripts/tailmon-zero.sh\" # added by tailmon-zero" >> /jffs/configs/profile.add
 fi
@@ -439,7 +439,7 @@ while true; do
 
   clear
 
-  # Grab the TAILMON config file and read it in
+  # Grab the TAILMON ZER0 config file and read it in
   if [ -f "$config" ]; then
     source "$config"
   else
@@ -448,7 +448,7 @@ while true; do
 
   while [ -f /jffs/addons/tailmon-zero.d/updating.txt ]; do
     clear
-    echo -e "${CGreen}[TAILMON is in Maintenance Mode]${CClear}"
+    echo -e "${CGreen}[TAILMON ZER0 is in Maintenance Mode]${CClear}"
     echo ""
     echo -e "Trying again in 30 seconds..."
     echo ""
@@ -577,12 +577,12 @@ while true; do
     exec sh /jffs/scripts/tailmon-zero.sh -setup
   fi
 
-  #Determine if a TAILMON autoupdate has happened and restart script
+  #Determine if a TAILMON ZER0 autoupdate has happened and restart script
   if [ -f /jffs/addons/tailmon-zero.d/updated.txt ]
     then
       printf "\33[2K\r"
-      printf "${CGreen}\r[Replacing TAILMON with Latest Version]"
-      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Replacing TAILMON with latest version." >> "$logfile"
+      printf "${CGreen}\r[Replacing TAILMON ZER0 with Latest Version]"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Replacing TAILMON ZER0 with latest version." >> "$logfile"
       sleep 1
       rm -f /jffs/addons/tailmon-zero.d/updated.txt >/dev/null 2>&1
       exec sh /jffs/scripts/tailmon-zero.sh

@@ -1,12 +1,12 @@
 # -------------------------------------------------------------------------------------------------------------------------
-# autoupdate will automatically download and install new TAILMON scripts and Tailscale binaries - run via CRON job/switch
+# autoupdate will automatically download and install new TAILMON ZER0 scripts and Tailscale binaries - run via CRON job/switch
 
 autoupdate()
 {
 
   clear
 
-  # Put TAILMON into maintenance mode
+  # Put TAILMON ZER0 into maintenance mode
   echo > /jffs/addons/tailmon-zero.d/updating.txt
 
   #Display tailmon-zero client header
@@ -18,7 +18,7 @@ autoupdate()
   if [ "$updatetm" -eq 1 ]
     then
       printf "\33[2K\r"
-      printf "${CGreen}\r[Checking Local TAILMON Version]"
+      printf "${CGreen}\r[Checking Local TAILMON ZER0 Version]"
 
       # Copy current version of script into a version file
       echo "$version" > "/jffs/addons/tailmon-zero.d/localver.txt"
@@ -29,10 +29,10 @@ autoupdate()
       # Download the latest version file from the source repository
       if [ "$track" = "1" ]
         then
-        printf "${CGreen}\r[Checking TAILMON BETA Version]"
+        printf "${CGreen}\r[Checking TAILMON ZER0 BETA Version]"
         curl --silent --retry 3 --connect-timeout 3 --max-time 6 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/beta/version.txt" -o "/jffs/addons/tailmon-zero.d/beta.txt"
       else
-        printf "${CGreen}\r[Checking Official TAILMON Version]"
+        printf "${CGreen}\r[Checking Official TAILMON ZER0 Version]"
         curl --silent --retry 3 --connect-timeout 3 --max-time 6 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/version.txt" -o "/jffs/addons/tailmon-zero.d/version.txt"
       fi
 
@@ -41,10 +41,10 @@ autoupdate()
       if [ $officialverchk -ne 0 ]
         then
         printf "\33[2K\r"
-        printf "${CGreen}\r[Unable to Determine TAILMON Version...Exiting]\n"
-      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine TAILMON version -- please check your internet connection. Autoupdate exiting." >> "$logfile"
+        printf "${CGreen}\r[Unable to Determine TAILMON ZER0 Version...Exiting]\n"
+      echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to determine TAILMON ZER0 version -- please check your internet connection. Autoupdate exiting." >> "$logfile"
         echo -e "${CClear}"
-        sendmessage 1 "Unable to reach TAILMON repository"
+        sendmessage 1 "Unable to reach TAILMON ZER0 repository"
         sleep 1
         rm -f /jffs/addons/tailmon-zero.d/updating.txt >/dev/null 2>&1
         exit 1
@@ -52,7 +52,7 @@ autoupdate()
       sleep 1
 
       printf "\33[2K\r"
-      printf "${CGreen}\r[Comparing TAILMON Versions]"
+      printf "${CGreen}\r[Comparing TAILMON ZER0 Versions]"
       sleep 1
 
       # Check differences in version and download if newer official version is present
@@ -69,10 +69,10 @@ autoupdate()
 
           if [ "$track" = "1" ]
             then
-            printf \"%s\" "${CGreen}\r[Downloading New TAILMON BETA v$serverver]\n"
+            printf \"%s\" "${CGreen}\r[Downloading New TAILMON ZER0 BETA v$serverver]\n"
             curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/beta/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh"
           else
-            printf \"%s\" "${CGreen}\r[Downloading New TAILMON STABLE v$serverver]\n"
+            printf \"%s\" "${CGreen}\r[Downloading New TAILMON ZER0 STABLE v$serverver]\n"
             curl --silent --retry 3 --connect-timeout 3 --max-time 5 --retry-delay 1 --retry-all-errors --fail "https://raw.githubusercontent.com/underd0se/TAILMON-Zero/main/tailmon-zero.sh" -o "/jffs/scripts/tailmon-zero.sh" && chmod 755 "/jffs/scripts/tailmon-zero.sh"
           fi
 
@@ -82,10 +82,10 @@ autoupdate()
           if [ $officialver -ne 0 ]
             then
               printf "\33[2K\r"
-              printf "${CGreen}\r[Unable to Download TAILMON...Exiting]\n"
-            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to download TAILMON -- please check your internet connection. Autoupdate exiting." >> "$logfile"
+              printf "${CGreen}\r[Unable to Download TAILMON ZER0...Exiting]\n"
+            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Unable to download TAILMON ZER0 -- please check your internet connection. Autoupdate exiting." >> "$logfile"
               echo -e "${CClear}"
-              sendmessage 1 "Unable to reach TAILMON repository"
+              sendmessage 1 "Unable to reach TAILMON ZER0 repository"
               sleep 1
               rm -f /jffs/addons/tailmon-zero.d/updating.txt >/dev/null 2>&1
               exit 1
@@ -93,15 +93,15 @@ autoupdate()
           verdirection=$(vercompare "$serverver" "$localver")
           if [ "$verdirection" = "lt" ]; then
             if [ "$track" = "1" ]; then tracklabel="Beta"; else tracklabel="Stable"; fi
-            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Installed TAILMON v$localver did not match the configured $tracklabel track -- corrected to v$serverver" >> "$logfile"
+            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Installed TAILMON ZER0 v$localver did not match the configured $tracklabel track -- corrected to v$serverver" >> "$logfile"
           else
-            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Successfully autoupdated TAILMON from v$localver to v$serverver" >> "$logfile"
+            echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Successfully autoupdated TAILMON ZER0 from v$localver to v$serverver" >> "$logfile"
           fi
-          sendmessage 0 "TAILMON Script Successfully Updated" "$localver" "$serverver" "$verdirection"
+          sendmessage 0 "TAILMON ZER0 Script Successfully Updated" "$localver" "$serverver" "$verdirection"
           echo > /jffs/addons/tailmon-zero.d/updated.txt
       else
         printf "\33[2K\r"
-        printf "${CGreen}\r[Local TAILMON Version is the Latest Available]\n"
+        printf "${CGreen}\r[Local TAILMON ZER0 Version is the Latest Available]\n"
         echo -e "${CClear}"
         sleep 1
       fi
@@ -446,10 +446,10 @@ scheduleautoupdates()
 while true
 do
   clear
-  echo -e "${InvGreen} ${InvDkGray}${CWhite} TAILMON Autoupdate Scheduler                                                          ${CClear}"
+  echo -e "${InvGreen} ${InvDkGray}${CWhite} TAILMON ZER0 Autoupdate Scheduler                                                          ${CClear}"
   echo -e "${InvGreen} ${CClear}"
   echo -e "${InvGreen} ${CClear} Please indicate below if you would like to enable and schedule a daily autoupdate CRON"
-  echo -e "${InvGreen} ${CClear} job. This can check for both TAILMON and Tailscale updates. Please NOTE: Autoupdate"
+  echo -e "${InvGreen} ${CClear} job. This can check for both TAILMON ZER0 and Tailscale updates. Please NOTE: Autoupdate"
   echo -e "${InvGreen} ${CClear} will only update to the latest stable release. Beta updates need to handled manually"
   echo -e "${InvGreen} ${CClear} using the option in the Main Setup & Configuration menu."
   echo -e "${InvGreen} ${CClear}"
@@ -462,7 +462,7 @@ do
   if [ "$updatets" == "1" ]; then updatetsdisp="${CGreen}Enabled${CCyan}"; else updatets=0; updatetsdisp="${CRed}Disabled${CCyan}"; fi
 
   echo -e "${InvGreen} ${CClear}"
-  echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}Autoupdate TAILMON Script  ${CClear} ${CGreen}(1)   -${CClear} $updatetmdisp${CClear}"
+  echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}Autoupdate TAILMON ZER0 Script  ${CClear} ${CGreen}(1)   -${CClear} $updatetmdisp${CClear}"
   echo -e "${InvGreen} ${CClear} ${InvDkGray}${CWhite}Autoupdate Tailscale Binary${CClear} ${CGreen}(2)   -${CClear} $updatetsdisp${CClear}"
   echo -e "${InvGreen} ${CClear}"
   if [ "$schedule" = "0" ]
@@ -487,7 +487,7 @@ do
           if [ -f /jffs/scripts/services-start ]
           then
             sed -i -e '/tailmon-zero.sh/d' /jffs/scripts/services-start
-            cru d RunTAILMONcheck
+            cru d RunTAILMON ZER0check
             schedulehrs=1
             schedulemin=0
             echo ""
@@ -572,19 +572,19 @@ do
           then
             if ! grep -q -F "sh /jffs/scripts/tailmon-zero.sh -autoupdate" /jffs/scripts/services-start
             then
-              echo 'cru a RunTAILMONcheck "'"$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"'"' >> /jffs/scripts/services-start
-              cru a RunTAILMONcheck "$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"
+              echo 'cru a RunTAILMON ZER0check "'"$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"'"' >> /jffs/scripts/services-start
+              cru a RunTAILMON ZER0check "$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"
             else
               #delete and re-add if it already exists in case there's a time change
               sed -i -e '/tailmon-zero.sh/d' /jffs/scripts/services-start
-              cru d RunTAILMONcheck
-              echo 'cru a RunTAILMONcheck "'"$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"'"' >> /jffs/scripts/services-start
-              cru a RunTAILMONcheck "$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"
+              cru d RunTAILMON ZER0check
+              echo 'cru a RunTAILMON ZER0check "'"$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"'"' >> /jffs/scripts/services-start
+              cru a RunTAILMON ZER0check "$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"
             fi
           else
-            echo 'cru a RunTAILMONcheck "'"$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"'"' >> /jffs/scripts/services-start
+            echo 'cru a RunTAILMON ZER0check "'"$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"'"' >> /jffs/scripts/services-start
             chmod 755 /jffs/scripts/services-start
-            cru a RunTAILMONcheck "$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"
+            cru a RunTAILMON ZER0check "$schedulemin $schedulehrs * * * sh /jffs/scripts/tailmon-zero.sh -autoupdate"
           fi
 
           echo
@@ -643,7 +643,7 @@ while true; do
   clear
   echo -e "${InvGreen} ${InvDkGray}${CWhite} Reboot Protection                                                                     ${CClear}"
   echo -e "${InvGreen} ${CClear}"
-  echo -e "${InvGreen} ${CClear} Please indicate below if you would like to enable TAILMON to autostart after a"
+  echo -e "${InvGreen} ${CClear} Please indicate below if you would like to enable TAILMON ZER0 to autostart after a"
   echo -e "${InvGreen} ${CClear} router reboot. This will ensure continued, uninterrupted Tailscale monitoring."
   echo -e "${InvGreen} ${CClear}"
   echo -e "${InvGreen} ${CClear} (Default = Disabled)"
@@ -946,7 +946,7 @@ while true; do
   echo -e "${InvGreen} ${CClear} A 3rd option (Custom) is also available, that allows you to enter your own custom${CClear}"
   echo -e "${InvGreen} ${CClear} settings for the ARGS, PREARGS, PRECMD and Tailscale Commandline. ${CClear}"
   echo -e "${InvGreen} ${CClear}"
-  echo -e "${InvGreen} ${CClear}${CYellow} NOTE: TAILMON will apply changes to modes after hitting the (e)xit key. If 'Custom'${CClear}"
+  echo -e "${InvGreen} ${CClear}${CYellow} NOTE: TAILMON ZER0 will apply changes to modes after hitting the (e)xit key. If 'Custom'${CClear}"
   echo -e "${InvGreen} ${CClear}${CYellow} operating mode is chosen, you will be presented with the option to edit custom${CClear}"
   echo -e "${InvGreen} ${CClear}${CYellow} Tailscale settings after changes have been applied.${CClear}"
   echo -e "${InvGreen} ${CClear}"
@@ -1067,7 +1067,7 @@ done
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
-# inject_s06tailscaled applies TAILMON Zero swapless logic and memory constraints
+# inject_s06tailscaled applies TAILMON ZER0 swapless logic and memory constraints
 
 inject_s06tailscaled()
 {
@@ -1080,7 +1080,7 @@ inject_s06tailscaled()
 
   if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
     # Clean old injections
-    sed -i '/# TAILMON Zero: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/# TAILMON ZER0: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
@@ -1092,7 +1092,7 @@ inject_s06tailscaled()
     sed -i '/^fi$/d' "/opt/etc/init.d/S06tailscaled" 2>/dev/null || true
 
     # Inject new logic
-    awk 'NR==2{print "# TAILMON Zero: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"'); [ \"$swap_total\" = \"0\" ] && echo 0 > /proc/sys/vm/overcommit_memory"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
+    awk 'NR==2{print "# TAILMON ZER0: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"'); [ \"$swap_total\" = \"0\" ] && echo 0 > /proc/sys/vm/overcommit_memory"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
   fi
 }
 

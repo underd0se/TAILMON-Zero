@@ -177,7 +177,7 @@ expressinstall()
   echo -e "${CGreen}Starting Tailscale connection...${CClear}"
   echo ""
   echo -e "${CGreen}Please copy the authentication link below into your browser and connect this device"
-  echo -e "to your tailnet. Do not paste the link back into the TAILMON terminal.${CClear}"
+  echo -e "to your tailnet. Do not paste the link back into the TAILMON ZER0 terminal.${CClear}"
   echo ""
 
   advroutescmd="--advertise-routes=$routes"
@@ -244,7 +244,7 @@ installts()
         echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: Tailscale Entware package installed." >> "$logfile"
 
         # The Entware package creates a fresh S06tailscaled service script. Apply the
-        # operating mode already selected in TAILMON so package defaults cannot leave
+        # operating mode already selected in TAILMON ZER0 so package defaults cannot leave
         # the saved mode and the actual service configuration out of sync.
         if [ ! -f "/opt/etc/init.d/S06tailscaled" ]; then
           echo ""
@@ -498,7 +498,7 @@ tsreset()
       echo -e "This action may be necessary at times when these switches are inadvertently set and "
       echo -e "registered with Tailscale, or due to switch functionality being altered or changed "
       echo -e "by the Tailscale developers themselves. Once the '--reset' switch has been sent, "
-      echo -e "TAILMON will reinitialize the connection back to its regular defaults."
+      echo -e "TAILMON ZER0 will reinitialize the connection back to its regular defaults."
       echo ""
       echo -e "${CRed}PLEASE NOTE:${CClear} If you have configured any custom commandline switches that you want "
       echo -e "to reset, you would need to run your own custom Tailscale command in a separate "

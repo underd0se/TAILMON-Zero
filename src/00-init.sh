@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# TAILMON (TAILMON.SH) is an all-in-one script that is optimized to install, maintain and monitor a Tailscale service and
+# TAILMON ZER0 (TAILMON ZER0.SH) is an all-in-one script that is optimized to install, maintain and monitor a Tailscale service and
 # connection from your Asus-Merlin FW router. It provides the basic steps needed to install and implement a successful
 # connection to your tailnet. It allows for 2 different modes of operation: Kernel and Userspace modes. Depending on your
-# needs, you can also enable exit node and subnet route advertisements. Separately, TAILMON functions as a Tailscale
+# needs, you can also enable exit node and subnet route advertisements. Separately, TAILMON ZER0 functions as a Tailscale
 # monitor application that will sit in the background (using the -screen utility), and will restart the Tailscale service
 # should it happen to go down. Many thanks to: @jksmurf, @ColinTaylor, @Aiadi, and @kuki68ster for all their help, input
 # and original testing of this script!
@@ -39,7 +39,7 @@ autostart=0
 schedule=0                                                           # Scheduler enable y/n
 schedulehrs=1                                                        # Scheduler hours
 schedulemin=0                                                        # Scheduler mins
-updatetm=0                                                           # Autoupdate TAILMON Script
+updatetm=0                                                           # Autoupdate TAILMON ZER0 Script
 updatets=0                                                           # Autoupdate Tailscale Binaries
 amtmemailsuccess=0
 amtmemailfailure=0
