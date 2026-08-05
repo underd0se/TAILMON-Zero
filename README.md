@@ -9,9 +9,12 @@ Asus-Merlin Tailscale Installer, Configurator and Monitor (Swapless Edition)
 TAILMON ZER0 was created to explicitly support Asuswrt-Merlin routers running **without swap space** (e.g. strict 512MB RAM limits) which natively causes Go-based `tailscaled` binaries to crash with `Segmentation fault` on startup. 
 
 **Key Changes from Upstream:**
-- **Dynamic Swapless Overcommit Bypass:** Safely tracks and conditionally injects `vm.overcommit_memory=0` during boot for swapless routers, natively integrated into Tailmon's `saveconfig()` to guarantee restoration upon uninstall.
-- **Zero NVRAM Footprint:** Complete removal of deprecated/messy NVRAM variable storage for memory management tracking.
-- **Aggressive Memory Tuning:** Hardcoded `GOMEMLIMIT=20MiB`, `GOGC=20`, and `GOMAXPROCS=1` via explicit native `export` declarations inside the `S06tailscaled` init script.
+- **Swapless Compatibility:** Allows Tailscale to run on routers without a swap file by dynamically managing system memory requirements. It respects your setup—whether you use a swap file or not, the script adapts accordingly.
+- **Lower Memory Footprint:** Aggressively limits background memory usage to help prevent Tailscale from exhausting your router's RAM.
+- **Reduced Flash Wear:** Moves temporary downloads and tracking files to the RAM disk to minimize writes to the router's internal storage (`/jffs/`).
+- **Responsive UI:** Removed heavy background polling loops to make the terminal menus more responsive and reduce CPU usage.
+- **Immediate Execution:** Adds a global shortcut during installation so you can type `tailmon-zer0` to launch the menu right away without needing to log out.
+- **Cleaner Uninstallation:** The uninstaller has been updated to restore all original system settings and remove leftover files more reliably.
 
 ---
 
