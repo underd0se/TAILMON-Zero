@@ -4157,6 +4157,16 @@ then
     exit "$?"
 fi
 
+# Check for and add an alias for TAILMON ZER0
+if ! grep -F "sh /jffs/scripts/tailmon-zero.sh" /jffs/configs/profile.add >/dev/null 2>/dev/null; then
+  echo "alias tailmon-zer0=\"sh /jffs/scripts/tailmon-zero.sh\" # added by tailmon-zero" >> /jffs/configs/profile.add
+fi
+
+# Ensure global symlink is available immediately without relogin
+if [ -d "/opt/bin" ] && [ ! -L "/opt/bin/tailmon-zer0" ]; then
+  ln -s /jffs/scripts/tailmon-zero.sh /opt/bin/tailmon-zer0 2>/dev/null
+fi
+
 # Check and see if any commandline option is being used
 if [ $# -eq 0 ]
   then
@@ -4358,15 +4368,7 @@ if [ ! -d "/jffs/addons/tailmon-zero.d" ]; then
   mkdir -p "/jffs/addons/tailmon-zero.d"
 fi
 
-# Check for and add an alias for TAILMON ZER0
-if ! grep -F "sh /jffs/scripts/tailmon-zero.sh" /jffs/configs/profile.add >/dev/null 2>/dev/null; then
-  echo "alias tailmon-zer0=\"sh /jffs/scripts/tailmon-zero.sh\" # added by tailmon-zero" >> /jffs/configs/profile.add
-fi
-
-# Ensure global symlink is available immediately without relogin
-if [ -d "/opt/bin" ] && [ ! -L "/opt/bin/tailmon-zer0" ]; then
-  ln -s /jffs/scripts/tailmon-zero.sh /opt/bin/tailmon-zer0 2>/dev/null
-fi
+# (Alias and symlink logic moved to the top of script execution)
 
 if [ ! -f "/opt/bin/timeout" ] || [ ! -f "/opt/sbin/screen" ]; then
   installdependencies
