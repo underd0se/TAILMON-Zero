@@ -2359,15 +2359,14 @@ done
 
 inject_s06tailscaled()
 {
-  # Capture old_overcommit for uninstall if swapless
-  local swap_total=$(free | awk '/^Swap:/ {print $2}')
-  if [ "$swap_total" = "0" ] && [ -z "$old_overcommit" ]; then
+  # Capture old_overcommit for uninstall unconditionally to ensure safe restoration
+  if [ -z "$old_overcommit" ]; then
     old_overcommit=$(cat /proc/sys/vm/overcommit_memory 2>/dev/null)
     saveconfig
   fi
 
   if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
-    # Clean old injections
+    # Clean old messy injections to prevent duplicates during update
     sed -i '/# TAILMON ZER0: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
@@ -2376,11 +2375,25 @@ inject_s06tailscaled()
     sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
-    # We must explicitly clean up stranded 'fi' but ONLY if it follows the overcommit block
     sed -i '/^fi$/d' "/opt/etc/init.d/S06tailscaled" 2>/dev/null || true
+    
+    # Clean new block logic
+    sed -i '/# TAILMON ZER0: Dynamic Swapless Block Start/,/# TAILMON ZER0: Dynamic Swapless Block End/d' "/opt/etc/init.d/S06tailscaled"
 
     # Inject new logic
-    awk 'NR==2{print "# TAILMON ZER0: Dynamic Swapless Overcommit Bypass"; print "export GOMAXPROCS=1"; print "export GOMEMLIMIT=20MiB"; print "export GOGC=20"; print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"'); [ \"$swap_total\" = \"0\" ] && echo 0 > /proc/sys/vm/overcommit_memory"}1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
+    awk -v old_oc="$old_overcommit" 'NR==2{
+      print "# TAILMON ZER0: Dynamic Swapless Block Start"
+      print "swap_total=$(free | awk '"'"'/^Swap:/ {print $2}'"'"')"
+      print "if [ \"$swap_total\" = \"0\" ]; then"
+      print "    export GOMAXPROCS=1"
+      print "    export GOMEMLIMIT=20MiB"
+      print "    export GOGC=20"
+      print "    echo 0 > /proc/sys/vm/overcommit_memory 2>/dev/null"
+      print "else"
+      print "    [ -n \"" old_oc "\" ] && echo \"" old_oc "\" > /proc/sys/vm/overcommit_memory 2>/dev/null"
+      print "fi"
+      print "# TAILMON ZER0: Dynamic Swapless Block End"
+    }1' "/opt/etc/init.d/S06tailscaled" > "/tmp/S06tailscaled.tmp" && mv "/tmp/S06tailscaled.tmp" "/opt/etc/init.d/S06tailscaled" && chmod +x "/opt/etc/init.d/S06tailscaled"
   fi
 }
 
@@ -4029,12 +4042,13 @@ vuninstall()
                   sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
-                  sed -i '/swap_total=\$(free/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/swap_total=$(free/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/^fi$/d' "/opt/etc/init.d/S06tailscaled" 2>/dev/null || true
-                  sed -i '/if \[ "\$swap_total" = "0" \]; then/d' "/opt/etc/init.d/S06tailscaled"
-                  sed -i '/echo 0 > \/proc\/sys\/vm\/overcommit_memory/d' "/opt/etc/init.d/S06tailscaled"
+                  
+                  # Clean new block logic
+                  sed -i '/# TAILMON ZER0: Dynamic Swapless Block Start/,/# TAILMON ZER0: Dynamic Swapless Block End/d' "/opt/etc/init.d/S06tailscaled"
                 fi
               fi
               echo ""
