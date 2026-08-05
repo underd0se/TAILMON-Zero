@@ -2367,7 +2367,7 @@ inject_s06tailscaled()
 
   if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
     # Clean old messy injections to prevent duplicates during update
-    sed -i '/# TAILMON ZER0: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
+    sed -i '/# TAILMON Zer.*: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
     sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
@@ -4038,7 +4038,7 @@ vuninstall()
               else
                 echo -e "\nStripping memory optimizations..."
                 if [ -f "/opt/etc/init.d/S06tailscaled" ]; then
-                  sed -i '/# TAILMON ZER0: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
+                  sed -i '/# TAILMON Zer.*: Dynamic Swapless/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOMAXPROCS=1/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOMEMLIMIT=20MiB/d' "/opt/etc/init.d/S06tailscaled"
                   sed -i '/export GOGC=20/d' "/opt/etc/init.d/S06tailscaled"
