@@ -689,7 +689,7 @@ expressinstall()
 
   echo -e "${CGreen}Executing: tailscale up $advroutescmd$sshcmd${CClear}"
   echo ""
-  if ! tailscale up "$advroutescmd""$sshcmd"; then
+  if ! tailscale up $advroutescmd$sshcmd; then
     expressinstallfail "The Tailscale connection did not start correctly."
   fi
 
@@ -1073,7 +1073,7 @@ tsup()
       if [ "$tsoperatingmode" == "Custom" ]; then
         echo "Executing: tailscale up $customcmdline"
         echo ""
-        tailscale up "$customcmdline"
+        tailscale up $customcmdline
         tsstat=$?
         if [ "$tsstat" -ne 0 ];
           then
@@ -1091,7 +1091,7 @@ tsup()
       else
         echo "Executing: tailscale up $exitnodecmd$advroutescmd$accroutescmd$sshcmd"
         echo ""
-        tailscale up "$exitnodecmd""$advroutescmd""$accroutescmd"$sshcmd
+        tailscale up $exitnodecmd$advroutescmd$accroutescmd$sshcmd
         tsstat=$?
         if [ "$tsstat" -ne 0 ];
           then
