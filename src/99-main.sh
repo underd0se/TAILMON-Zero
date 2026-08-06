@@ -441,6 +441,7 @@ if [ -f "/opt/bin/timeout" ] # If the timeout utility is available then use it a
     timeoutlng=""
 fi
 
+resettimer=0
 while true; do
 
   clear
