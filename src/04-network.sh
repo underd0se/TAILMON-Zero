@@ -989,7 +989,8 @@ vsetup()
 
         [Ll])
           if tailscaleready; then
-            exec sh /jffs/scripts/tailmon-zero.sh -noswitch
+            timer=$timerloop
+            break
           else
             monitoringblocked pause
           fi

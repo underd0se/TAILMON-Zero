@@ -523,12 +523,15 @@ initialsetup()
       case $SelectSetup in
         1)
         echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON ZER0 Express Install initiated." >> "$logfile"
-        expressinstall;;
+        expressinstall
+        return
+        ;;
 
         2)
           echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON ZER0 Advanced Install initiated." >> "$logfile"
           saveconfig
-          exec sh /jffs/scripts/tailmon-zero.sh -setup
+          vsetup
+          return
           ;;
 
         [Ee]) echo -e "${CClear}"; echo ""; exit 0;;
@@ -548,7 +551,7 @@ expressinstallfail()
   echo ""
   read -rsp $'Press any key to return to setup...\n' -n1 key
 
-  exec sh /jffs/scripts/tailmon-zero.sh -setup
+  vsetup
   exit 1
 }
 
@@ -742,9 +745,8 @@ expressinstall()
   echo ""
   read -rsp $'Press any key to continue...\n' -n1 key
 
-  exec sh /jffs/scripts/tailmon-zero.sh -noswitch
   echo -e "${CClear}"
-  exit 0
+  return
 }
 
 # -------------------------------------------------------------------------------------------------------------------------
@@ -3411,7 +3413,8 @@ vsetup()
 
         [Ll])
           if tailscaleready; then
-            exec sh /jffs/scripts/tailmon-zero.sh -noswitch
+            timer=$timerloop
+            break
           else
             monitoringblocked pause
           fi
@@ -4319,8 +4322,7 @@ if [ "$1" == "-noswitch" ]
     if ! tailscaleready; then
       monitoringblocked
       sleep 1
-      exec sh /jffs/scripts/tailmon-zero.sh -setup
-      exit 1
+      vsetup
     fi
 
     if [ ! -f "$config" ]; then
@@ -4351,8 +4353,7 @@ if [ "$1" == "-bw" ] || [ "$1" == "-now" ]; then
     clear
     monitoringblocked
     sleep 1
-    exec sh /jffs/scripts/tailmon-zero.sh -setup
-    exit 1
+    vsetup
   fi
 fi
 
@@ -4394,6 +4395,12 @@ while true; do
     source "$config"
   else
     initialsetup
+    if [ -f "$config" ]; then
+      source "$config"
+    else
+      echo "Setup aborted."
+      exit 0
+    fi
   fi
 
   while [ -f /jffs/addons/tailmon-zero.d/updating.txt ]; do
@@ -4524,7 +4531,8 @@ while true; do
   else
     echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - ERROR: Tailscale binaries not found. Please investigate." >> "$logfile"
     tsinstalled=0
-    exec sh /jffs/scripts/tailmon-zero.sh -setup
+    vsetup
+    continue
   fi
 
   #Determine if a TAILMON ZER0 autoupdate has happened and restart script

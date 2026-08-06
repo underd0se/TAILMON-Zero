@@ -416,12 +416,15 @@ initialsetup()
       case $SelectSetup in
         1)
         echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON ZER0 Express Install initiated." >> "$logfile"
-        expressinstall;;
+        expressinstall
+        return
+        ;;
 
         2)
           echo -e "$(date +'%b %d %Y %X') $($timeoutcmd$timeoutsec nvram get lan_hostname) TAILMON[$$] - INFO: TAILMON ZER0 Advanced Install initiated." >> "$logfile"
           saveconfig
-          exec sh /jffs/scripts/tailmon-zero.sh -setup
+          vsetup
+          return
           ;;
 
         [Ee]) echo -e "${CClear}"; echo ""; exit 0;;
