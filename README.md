@@ -12,7 +12,8 @@ TAILMON ZER0 was created to explicitly support Asuswrt-Merlin routers running **
 - **Swapless Compatibility:** Allows Tailscale to run on routers without a swap file by dynamically managing system memory requirements. It respects your setup—whether you use a swap file or not, the script adapts accordingly.
 - **Lower Memory Footprint:** Aggressively limits background memory usage to help prevent Tailscale from exhausting your router's RAM.
 - **Reduced Flash Wear:** Moves temporary downloads and tracking files to the RAM disk to minimize writes to the router's internal storage (`/jffs/`).
-- **Responsive UI:** Removed heavy background polling loops to make the terminal menus more responsive and reduce CPU usage.
+- **Stable Execution Flow:** Replaced fragmented process restarts with clean function calls in the setup menus. This eliminates screen flashing and prevents the wizard from accidentally skipping steps.
+- **Codebase Modernization:** Split the original 4,500-line monolithic script into organized, modular files for easier maintenance, and configured diagnostics to correctly support Asuswrt's `ash` shell.
 - **Immediate Execution:** Adds a global shortcut during installation so you can type `tailmon-zer0` to launch the menu right away without needing to log out.
 - **Cleaner Uninstallation:** The uninstaller has been updated to restore all original system settings and remove leftover files more reliably.
 
