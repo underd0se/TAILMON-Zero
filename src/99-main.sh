@@ -230,9 +230,7 @@ fi
 # Check and see if any commandline option is being used
 if [ $# -eq 0 ]
   then
-    clear
-    exec sh /jffs/scripts/tailmon-zero.sh -noswitch
-    exit 0
+    set -- "-noswitch"
 fi
 
 # Check and see if an invalid commandline option is being used
